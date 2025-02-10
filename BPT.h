@@ -89,10 +89,10 @@ public:
         }*/
         basic_file.close();
 
-        node_file.open(node_file_name, std::ios::in|std::ios::out);
-        if (!node_file.is_open()) {
+        //node_file.open(node_file_name, std::ios::in|std::ios::out);
+        //if (!node_file.is_open()) {
             node_file.open(node_file_name, std::ios::out);
-        }
+        //}
     }
 
     ~BPT() {

@@ -31,3 +31,10 @@ int main() {
     }
     return 0;
 }
+/*
+100
+insert FlowersForAlgernon 1966
+find FlowersForAlgernon
+insert CppPrimer 2012
+find CppPrimer
+*/

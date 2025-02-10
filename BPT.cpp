@@ -103,15 +103,27 @@ void BPT<T>::splitNode() {
 
 template<class T>
 void BPT<T>::insert(const T &data, const int &son_index) {
-    for (int i = cur.size; i >= 1; --i) {
-        if (data < cur.storage[i - 1]) {
-            cur.storage[i] = cur.storage[i - 1];
-            cur.son[i] = cur.son[i - 1];
+    if (cur.size == 0) {
+        cur.storage[0] = data;
+        cur.son[0] = son_index;
+    }
+    else {
+        bool flag = false;
+        for (int i = cur.size; i >= 1; --i) {
+            if (data < cur.storage[i - 1]) {
+                cur.storage[i] = cur.storage[i - 1];
+                cur.son[i] = cur.son[i - 1];
+            }
+            else {
+                cur.storage[i] = data;
+                cur.son[i] = son_index;
+                flag = true;
+                break;
+            }
         }
-        else {
-            cur.storage[i] = data;
-            cur.son[i] = son_index;
-            break;
+        if (!flag) {
+            cur.storage[0] = data;
+            cur.son[0] = son_index;
         }
     }
     ++cur.size;
@@ -134,6 +146,9 @@ template<class T>
 void BPT<T>::flush(const int &st) {
     bool flag = false;
     readNode(st);
+    if (st == root) {
+        return;
+    }
     Node<T> son_node = cur;
     readNode(cur.father);
     while (!flag) {
@@ -346,7 +361,7 @@ void BPT<T>::removeData(const T &data) {
     flush(cur.index);
 
     while(true) {
-        if (cur.size <= node_size / 2) {
+        if (cur.size <= node_size / 2 && cur.index != root) {
             bool flag_1 = borrowFromRight();
             bool flag_2 = borrowFromLeft();
             if (!flag_1 && !flag_2) {
