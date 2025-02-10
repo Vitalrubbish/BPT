@@ -28,20 +28,21 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 }
 
 template<class T>
-void BPT<T>::readNode(const int &index) {
-    node_file.seekp(index * sizeof(Node<T>));
+void BPT<T>::readNode(const int &index_) {
+    node_file.seekp(0, std::fstream::end);
+    node_file.seekp(index_ * sizeof(Node<T>));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
 }
 
 template<class T>
-void BPT<T>::writeNode(Node<T> node, const int &index) {
-    node_file.seekp(index * sizeof(Node<T>));
+void BPT<T>::writeNode(Node<T> node, const int &index_) {
+    node_file.seekp(index_ * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
 }
 
 template<class T>
 void BPT<T>::splitNode() {
-    int mid = (cur.size + 1) / 2;
+    int mid = node_size / 2;
 
     Node<T> new_node{};
     new_node.index = new_id;
@@ -62,10 +63,17 @@ void BPT<T>::splitNode() {
         cur.next = new_node.index;
     }
 
-    for (int i = mid; i < cur.size; ++i) {
-        new_node.storage[i - mid] = cur.storage[i];
-        new_node.son[i - mid] = cur.son[i];
+    Node<T> tmp = cur;
+    for (int i = mid; i < tmp.size; ++i) {
+        new_node.storage[i - mid] = tmp.storage[i];
+        new_node.son[i - mid] = tmp.son[i];
+        if (tmp.son[i] != -1) {
+            readNode(tmp.son[i]);
+            cur.father = new_node.index;
+            writeNode(cur, cur.index);
+        }
     }
+    cur = tmp;
 
     new_node.size = cur.size - mid;
     cur.size = mid;
@@ -83,7 +91,7 @@ void BPT<T>::splitNode() {
         new_root.son[1] = new_node.index;
         new_root.is_leaf = false;
         new_root.size = 2;
-        writeNode(new_root, new_root.index);
+        cur = new_root;
     }
     else {
         readNode(original_node.father);
@@ -143,7 +151,7 @@ void BPT<T>::remove(const T &data) {
 }
 
 template<class T>
-void BPT<T>::flush(const int &st) {
+void BPT<T>::flush(int st) {
     bool flag = false;
     readNode(st);
     if (st == root) {
@@ -208,8 +216,8 @@ bool BPT<T>::borrowFromRight() {
         writeNode(cur, cur.index);
         cur = cur_node;
         insert(tmp, right_son);
-        flush(cur.index);
         writeNode(cur, cur.index);
+        flush(cur.index);
         return true;
     }
     return false;
@@ -307,7 +315,6 @@ void BPT<T>::combine() {
             break;
         }
     }
-
 }
 
 template<class T>
@@ -319,7 +326,7 @@ void BPT<T>::addData(const T &data) {
             break;
         }
         for (int i = 0; i < cur.size; i++) {
-            if (data <= cur.storage[i]) {
+            if (data <= cur.storage[i] || i == cur.size - 1) {
                 p = cur.son[i];
                 break;
             }
@@ -388,6 +395,7 @@ void BPT<T>::findData(const std::string &str) {
             std::string _str(cur.storage[i].key, cur.storage[i].key_len);
             if (str <= _str) {
                 p = cur.son[i];
+                break;
             }
         }
     }
