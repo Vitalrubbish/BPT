@@ -5,7 +5,7 @@
 #include <cstring>
 #include <fstream>
 
-constexpr int node_size = 48;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 52;  //into debug mode you can modify node_size to 4
 
 struct Data {
     char key[64]{};
