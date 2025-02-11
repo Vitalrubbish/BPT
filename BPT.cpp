@@ -185,29 +185,40 @@ template<class T>
 bool BPT<T>::borrowFromRight() {
     bool flag = false;
     int depth_count = 0;
-    Node<T> cur_node = cur, right_node{};
-    while (true) {
-        if (cur.index == root) {
-            cur = cur_node;
+    Node<T> cur_node = cur;
+
+    if (cur_node.is_leaf) {
+        if (cur_node.next != -1) {
+            readNode(cur_node.next);
+        }
+        else {
             return false;
         }
-        readNode(cur.father);
-        for (int i = 0; i < cur.size; i++) {
-            if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
-                if (i < cur.size - 1) {
-                    readNode(cur.son[i + 1]);
-                    for (int j = 0; j < depth_count; j++) {
-                        readNode(cur.son[0]);
+    }
+    else {
+        while (true) {
+            if (cur.index == root) {
+                cur = cur_node;
+                return false;
+            }
+            readNode(cur.father);
+            for (int i = 0; i < cur.size; i++) {
+                if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
+                    if (i < cur.size - 1) {
+                        readNode(cur.son[i + 1]);
+                        for (int j = 0; j < depth_count; j++) {
+                            readNode(cur.son[0]);
+                        }
+                        flag = true;
                     }
-                    flag = true;
+                    break;
                 }
+            }
+            if (flag) {
                 break;
             }
+            ++depth_count;
         }
-        if (flag) {
-            break;
-        }
-        ++depth_count;
     }
 
     if (cur.size > node_size / 2) {
@@ -236,35 +247,44 @@ template<class T>
 bool BPT<T>::borrowFromLeft() {
     bool flag = false;
     int depth_count = 0;
-    Node<T> cur_node = cur, right_node{};
-    while (true) {
-        if (cur.index == root) {
-            cur = cur_node;
+    Node<T> cur_node = cur;
+    if (cur_node.is_leaf) {
+        if (cur_node.prev != -1) {
+            readNode(cur_node.prev);
+        }
+        else {
             return false;
         }
-        readNode(cur.father);
-        for (int i = 0; i < cur.size; i++) {
-            if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
-                if (i > 0) {
-                    readNode(cur.son[i - 1]);
-                    for (int j = 0; j < depth_count; j++) {
-                        readNode(cur.son[cur.size - 1]);
+    }
+    else {
+        while (true) {
+            if (cur.index == root) {
+                cur = cur_node;
+                return false;
+            }
+            readNode(cur.father);
+            for (int i = 0; i < cur.size; i++) {
+                if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
+                    if (i > 0) {
+                        readNode(cur.son[i - 1]);
+                        for (int j = 0; j < depth_count; j++) {
+                            readNode(cur.son[cur.size - 1]);
+                        }
+                        flag = true;
                     }
-                    flag = true;
+                    break;
                 }
+            }
+            if (flag) {
                 break;
             }
+            ++depth_count;
         }
-        if (flag) {
-            break;
-        }
-        ++depth_count;
     }
 
     if (cur.size > node_size / 2) {
         T tmp = cur.storage[cur.size - 1];
         int left_son = cur.son[cur.size - 1];
-        bool f = false;
         remove(tmp);
         writeNode(cur, cur.index);
         flush(cur.index);
