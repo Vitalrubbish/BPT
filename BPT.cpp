@@ -148,16 +148,28 @@ void BPT<T>::insert(const T &data, const int &son_index) {
 
 template<class T>
 void BPT<T>::remove(const T &data) {
-    for (int i = 0; i < cur.size; i++) {
-        if (data == cur.storage[i]) {
-            for (int j = i; j < cur.size - 1; j++) {
-                cur.storage[j] = cur.storage[j + 1];
-                cur.son[j] = cur.son[j + 1];
-            }
-            --cur.size;
+    int pos = -1, l = 0, r = cur.size - 1;
+    while (l <= r) {
+        int mid = (l + r) / 2;
+        if (cur.storage[mid] == data) {
+            pos = mid;
             break;
         }
+        if (data < cur.storage[mid]) {
+            r = mid - 1;
+        }
+        else {
+            l = mid + 1;
+        }
     }
+    if (pos == -1) {
+        return;
+    }
+    for (int i = pos; i < cur.size - 1; i++) {
+        cur.storage[i] = cur.storage[i + 1];
+        cur.son[i] = cur.son[i + 1];
+    }
+    --cur.size;
 }
 
 template<class T>
@@ -400,13 +412,16 @@ void BPT<T>::addData(const T &data) {
         p = cur.son[l];
     }
 
+    int prev_size = cur.size;
     insert(data, -1);
-    writeNode(cur, cur.index);
-    if (data == cur.storage[cur.size - 1]) {
-        flush(cur.index);
-    }
-    while (cur.size > node_size) {
-        splitNode();
+    if (cur.size != prev_size) {
+        writeNode(cur, cur.index);
+        if (data == cur.storage[cur.size - 1]) {
+            flush(cur.index);
+        }
+        while (cur.size > node_size) {
+            splitNode();
+        }
     }
 
 }
