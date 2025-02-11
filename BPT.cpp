@@ -431,14 +431,25 @@ void BPT<T>::removeData(const T &data) {
         }
     }
 
+    if (cur.size == 0) {
+        return;
+    }
+
     bool f = false;
     if (data == cur.storage[cur.size - 1]) {
         f = true;
     }
+
+    int prev_size = cur.size;
     remove(data);
-    writeNode(cur, cur.index);
-    if (f) {
-        flush(cur.index);
+    if (cur.size != prev_size) {
+        writeNode(cur, cur.index);
+        if (f) {
+            flush(cur.index);
+        }
+    }
+    else {
+        return;
     }
 
     while(true) {
