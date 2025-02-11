@@ -124,29 +124,25 @@ void BPT<T>::splitNode() {
 
 template<class T>
 void BPT<T>::insert(const T &data, const int &son_index) {
-    if (cur.size == 0) {
-        cur.storage[0] = data;
-        cur.son[0] = son_index;
-    }
-    else {
-        bool flag = false;
-        for (int i = cur.size; i >= 1; --i) {
-            if (data < cur.storage[i - 1]) {
-                cur.storage[i] = cur.storage[i - 1];
-                cur.son[i] = cur.son[i - 1];
-            }
-            else {
-                cur.storage[i] = data;
-                cur.son[i] = son_index;
-                flag = true;
-                break;
-            }
+    int l = 0, r = cur.size - 1;
+    while (l <= r) {
+        int mid = (l + r) / 2;
+        if (data == cur.storage[mid]) {
+            return;
         }
-        if (!flag) {
-            cur.storage[0] = data;
-            cur.son[0] = son_index;
+        if (data < cur.stroage[mid]) {
+            r = mid - 1;
+        }
+        else {
+            l = mid + 1;
         }
     }
+    for (int i = cur.size - 1; i >= l; --i) {
+        cur.storage[i + 1] = cur.storage[i];
+        cur.son[i + 1] = cur.son[i];
+    }
+    cur.storage[l] = data;
+    cur.son[l] = son_index;
     ++cur.size;
 }
 
@@ -159,6 +155,7 @@ void BPT<T>::remove(const T &data) {
                 cur.son[j] = cur.son[j + 1];
             }
             --cur.size;
+            break;
         }
     }
 }
@@ -401,20 +398,6 @@ void BPT<T>::addData(const T &data) {
 
         q = p;
         p = cur.son[l];
-    }
-
-    int l = 0, r = cur.size - 1;
-    while (l <= r) {
-        int mid = (l + r) / 2;
-        if (data == cur.storage[mid]) {
-            return;
-        }
-        if (data < cur.storage[mid]) {
-            r = mid - 1;
-        }
-        else {
-            l = mid + 1;
-        }
     }
 
     insert(data, -1);
