@@ -383,7 +383,9 @@ void BPT<T>::addData(const T &data) {
 
     insert(data, -1);
     writeNode(cur, cur.index);
-    flush(cur.index);
+    if (data == cur.storage[cur.size - 1]) {
+        flush(cur.index);
+    }
     while (cur.size > node_size) {
         splitNode();
     }
@@ -406,9 +408,15 @@ void BPT<T>::removeData(const T &data) {
         }
     }
 
+    bool f = false;
+    if (data == cur.storage[cur.size - 1]) {
+        f = true;
+    }
     remove(data);
     writeNode(cur, cur.index);
-    flush(cur.index);
+    if (f) {
+        flush(cur.index);
+    }
 
     while(true) {
         if (cur.size < node_size / 2 && cur.index != root) {
