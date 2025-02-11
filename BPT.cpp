@@ -184,44 +184,36 @@ bool BPT<T>::borrowFromRight() {
     int depth_count = 0;
     Node<T> cur_node = cur;
 
-    if (cur_node.is_leaf) {
-        if (cur_node.next != -1) {
-            readNode(cur_node.next);
-        }
-        else {
+    while (true) {
+        if (cur.index == root) {
+            cur = cur_node;
             return false;
         }
-    }
-    else {
-        while (true) {
-            if (cur.index == root) {
-                cur = cur_node;
-                return false;
-            }
-            readNode(cur.father);
-            for (int i = 0; i < cur.size; i++) {
-                if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
-                    if (i < cur.size - 1) {
-                        int p = cur.index;
-                        readNode(cur.son[i + 1]);
+        readNode(cur.father);
+        for (int i = 0; i < cur.size; i++) {
+            if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
+                if (i < cur.size - 1) {
+                    int p = cur.index;
+                    readNode(cur.son[i + 1]);
+                    if (cur.father != p) {
                         cur.father = p;
                         writeNode(cur, cur.index);
-                        for (int j = 0; j < depth_count; j++) {
-                            p = cur.index;
-                            readNode(cur.son[0]);
-                            cur.father = p;
-                            writeNode(cur, cur.index);
-                        }
-                        flag = true;
                     }
-                    break;
+                    for (int j = 0; j < depth_count; j++) {
+                        p = cur.index;
+                        readNode(cur.son[0]);
+                        cur.father = p;
+                        writeNode(cur, cur.index);
+                    }
+                    flag = true;
                 }
-            }
-            if (flag) {
                 break;
             }
-            ++depth_count;
         }
+        if (flag) {
+            break;
+        }
+        ++depth_count;
     }
 
     if (cur.size > node_size / 2) {
@@ -369,11 +361,13 @@ void BPT<T>::addData(const T &data) {
     int p = root, q = -1;
     while (true) {
         readNode(p);
-        cur.father = q;
+        if (cur.father != q) {
+            cur.father = q;
+            writeNode(cur, cur.index);
+        }
         if (cur.is_leaf) {
             break;
         }
-        writeNode(cur, cur.index);
         for (int i = 0; i < cur.size; i++) {
             if (data <= cur.storage[i] || i == cur.size - 1) {
                 q = p;
@@ -404,7 +398,10 @@ void BPT<T>::removeData(const T &data) {
     int p = root, q = -1;
     while (true) {
         readNode(p);
-        cur.father = q;
+        if (cur.father != q) {
+            cur.father = q;
+            writeNode(cur, cur.index);
+        }
         if (cur.is_leaf) {
             break;
         }
