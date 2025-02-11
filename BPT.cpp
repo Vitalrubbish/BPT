@@ -264,6 +264,7 @@ bool BPT<T>::borrowFromLeft() {
     if (cur.size > node_size / 2) {
         T tmp = cur.storage[cur.size - 1];
         int left_son = cur.son[cur.size - 1];
+        bool f = false;
         remove(tmp);
         writeNode(cur, cur.index);
         flush(cur.index);
