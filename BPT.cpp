@@ -384,17 +384,36 @@ void BPT<T>::addData(const T &data) {
         if (cur.is_leaf) {
             break;
         }
-        for (int i = 0; i < cur.size; i++) {
-            if (data <= cur.storage[i] || i == cur.size - 1) {
-                q = p;
-                p = cur.son[i];
-                break;
+
+        int l = 0, r = cur.size - 1, mid;
+        while (l <= r) {
+            mid = (l + r) / 2;
+            if (data <= cur.storage[mid]) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
             }
         }
+        if (l == cur.size) {
+            l = cur.size - 1;
+        }
+
+        q = p;
+        p = cur.son[l];
     }
-    for (int i = 0; i < cur.size; i++) {
-        if (data == cur.storage[i]) {
+
+    int l = 0, r = cur.size - 1;
+    while (l <= r) {
+        int mid = (l + r) / 2;
+        if (data == cur.storage[mid]) {
             return;
+        }
+        if (data < cur.storage[mid]) {
+            r = mid - 1;
+        }
+        else {
+            l = mid + 1;
         }
     }
 
@@ -422,13 +441,23 @@ void BPT<T>::removeData(const T &data) {
             break;
         }
         writeNode(cur, cur.index);
-        for (int i = 0; i < cur.size; i++) {
-            if (data <= cur.storage[i] || i == cur.size - 1) {
-                q = p;
-                p = cur.son[i];
-                break;
+
+        int l = 0, r = cur.size - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (data <= cur.storage[mid]) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
             }
         }
+        if (l == cur.size) {
+            return;
+        }
+
+        q = p;
+        p = cur.son[l];
     }
 
     if (cur.size == 0) {
@@ -482,13 +511,24 @@ void BPT<T>::findData(const std::string &str) {
         if (cur.is_leaf) {
             break;
         }
-        for (int i = 0; i < cur.size; i++) {
-            std::string _str(cur.storage[i].key, cur.storage[i].key_len);
-            if (str <= _str || i == cur.size - 1) {
-                p = cur.son[i];
-                break;
+
+        int l = 0, r = cur.size - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            std::string _str(cur.storage[mid].key, cur.storage[mid].key_len);
+            if (str <= _str) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
             }
         }
+
+        if (l == cur.size) {
+            std::cout << "null" << '\n';
+            return;
+        }
+        p = cur.son[l];
     }
 
     bool output = false;
