@@ -338,13 +338,10 @@ void BPT<T>::combine() {
                     cur = tmp;
                 }
 
-                Node<T> father_node = cur;
                 for (int j = 0; j < cur_node.size; j++) {
-                    father_node.storage[j + father_node.size] = cur_node.storage[j];
-                    father_node.son[j + father_node.size] = cur_node.son[j];
+                    cur.storage[j + cur.size] = cur_node.storage[j];
+                    cur.son[j + cur.size] = cur_node.son[j];
                 }
-                cur = father_node;
-
                 cur.size += cur_node.size;
                 writeNode(cur, cur.index);
             }
@@ -359,12 +356,10 @@ void BPT<T>::combine() {
                 writeNode(cur, cur.index);
 
                 readNode(next_index);
-                Node<T> father_node = cur;
-                for (int j = 0; j < father_node.size; j++) {
-                    cur_node.storage[j + cur_node.size] = father_node.storage[j];
-                    cur_node.son[j + cur_node.size] = father_node.son[j];
+                for (int j = 0; j < cur.size; j++) {
+                    cur_node.storage[j + cur_node.size] = cur.storage[j];
+                    cur_node.son[j + cur_node.size] = cur.son[j];
                 }
-                cur = father_node;
 
                 cur_node.size += cur.size;
                 cur_node.next = cur.next;
