@@ -74,15 +74,15 @@ public:
         basic_file_name = "basic_" + file_name;
         node_file_name = "node_" + file_name;
 
-        //node_file.open(node_file_name, std::ios::in|std::ios::out);
-        //if (!node_file.is_open()) {
+        node_file.open(node_file_name, std::ios::in|std::ios::out);
+        if (!node_file.is_open()) {
             node_file.open(node_file_name, std::ios::out);
             node_file.close();
             node_file.open(node_file_name, std::ios::in|std::ios::out);
-        //}
+        }
 
-        //basic_file.open(basic_file_name, std::ios::in|std::ios::out);
-        //if (!basic_file.is_open()) {
+        basic_file.open(basic_file_name, std::ios::in|std::ios::out);
+        if (!basic_file.is_open()) {
             basic_file.open(basic_file_name, std::ios::out);
             basic_file.close();
             basic_file.open(basic_file_name, std::ios::in|std::ios::out);
@@ -90,13 +90,13 @@ public:
             cur.index = new_id;
             writeNode(cur, cur.index);
             new_id++;
-        //}
-        /*else {
+        }
+        else {
             basic_file.read(reinterpret_cast<char*> (&root), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&head), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&new_id), sizeof(int));
         }
-        basic_file.close();*/
+        basic_file.close();
     }
 
     ~BPT() {
