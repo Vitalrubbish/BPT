@@ -1,14 +1,14 @@
 #include "BPT.h"
 
 bool operator== (const Data &obj1, const Data &obj2) {
-    std::string key1(obj1.key, obj1.key_len);
-    std::string key2(obj2.key, obj2.key_len);
+    std::string_view key1(obj1.key, obj1.key_len);
+    std::string_view key2(obj2.key, obj2.key_len);
     return key1 == key2 && obj1.value == obj2.value;
 }
 
 bool operator< (const Data &obj1, const Data &obj2) {
-    std::string key1(obj1.key, obj1.key_len);
-    std::string key2(obj2.key, obj2.key_len);
+    std::string_view key1(obj1.key, obj1.key_len);
+    std::string_view key2(obj2.key, obj2.key_len);
     if (key1 != key2) {
         return key1 < key2;
     }
@@ -16,16 +16,32 @@ bool operator< (const Data &obj1, const Data &obj2) {
 }
 
 bool operator> (const Data &obj1, const Data &obj2) {
-    return obj2 < obj1;
+    std::string_view key1(obj1.key, obj1.key_len);
+    std::string_view key2(obj2.key, obj2.key_len);
+    if (key1 != key2) {
+        return key1 > key2;
+    }
+    return obj1.value > obj2.value;
 }
 
 bool operator<= (const Data &obj1, const Data &obj2) {
-    return obj1 == obj2 || obj1 < obj2;
+    std::string_view key1(obj1.key, obj1.key_len);
+    std::string_view key2(obj2.key, obj2.key_len);
+    if (key1 != key2) {
+        return key1 < key2;
+    }
+    return obj1.value <= obj2.value;
 }
 
 bool operator>= (const Data &obj1, const Data &obj2) {
-    return obj1 == obj2 || obj1 > obj2;
+    std::string_view key1(obj1.key, obj1.key_len);
+    std::string_view key2(obj2.key, obj2.key_len);
+    if (key1 != key2) {
+        return key1 > key2;
+    }
+    return obj1.value >= obj2.value;
 }
+
 
 template<class T>
 void BPT<T>::readNode(const int &index_) {
