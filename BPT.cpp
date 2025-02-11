@@ -130,7 +130,7 @@ void BPT<T>::insert(const T &data, const int &son_index) {
         if (data == cur.storage[mid]) {
             return;
         }
-        if (data < cur.stroage[mid]) {
+        if (data < cur.storage[mid]) {
             r = mid - 1;
         }
         else {
