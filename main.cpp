@@ -2,6 +2,8 @@
 #include "BPT.h"
 BPT <Data> bpt("file");
 int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
     int operation_cnt;
     std::cin >> operation_cnt;
     while (operation_cnt--) {
