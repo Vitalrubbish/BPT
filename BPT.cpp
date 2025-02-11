@@ -79,7 +79,7 @@ void BPT<T>::splitNode() {
     cur.size = mid;
 
     Node<T> original_node = cur;
-    if (original_node.father == -1) {
+    if (original_node.index == root) {
         Node<T> new_root{};
         new_root.index = new_id;
         ++new_id;
@@ -153,10 +153,10 @@ void BPT<T>::remove(const T &data) {
 template<class T>
 void BPT<T>::flush(int st) {
     bool flag = false;
-    readNode(st);
     if (st == root) {
         return;
     }
+    Node<T> st_node = cur;
     Node<T> son_node = cur;
     readNode(cur.father);
     while (!flag) {
@@ -178,7 +178,7 @@ void BPT<T>::flush(int st) {
         }
         readNode(cur.father);
     }
-    readNode(st);
+    cur = st_node;
 }
 
 template<class T>
