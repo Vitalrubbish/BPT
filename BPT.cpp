@@ -45,9 +45,6 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 
 template<class T>
 void BPT<T>::readNode(const int &index_) {
-    if (index_ == -1) {
-        std::cout << "Error occurred" << '\n';
-    }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
 }
