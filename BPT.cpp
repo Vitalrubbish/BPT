@@ -29,7 +29,9 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 
 template<class T>
 void BPT<T>::readNode(const int &index_) {
-    node_file.seekp(0, std::fstream::end);
+    if (index_ == -1) {
+        std::cout << "Error occurred" << '\n';
+    }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
 }
@@ -67,11 +69,6 @@ void BPT<T>::splitNode() {
     for (int i = mid; i < tmp.size; ++i) {
         new_node.storage[i - mid] = tmp.storage[i];
         new_node.son[i - mid] = tmp.son[i];
-        if (tmp.son[i] != -1) {
-            readNode(tmp.son[i]);
-            cur.father = new_node.index;
-            writeNode(cur, cur.index);
-        }
     }
     cur = tmp;
 
@@ -205,9 +202,15 @@ bool BPT<T>::borrowFromRight() {
             for (int i = 0; i < cur.size; i++) {
                 if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
                     if (i < cur.size - 1) {
+                        int p = cur.index;
                         readNode(cur.son[i + 1]);
+                        cur.father = p;
+                        writeNode(cur, cur.index);
                         for (int j = 0; j < depth_count; j++) {
+                            p = cur.index;
                             readNode(cur.son[0]);
+                            cur.father = p;
+                            writeNode(cur, cur.index);
                         }
                         flag = true;
                     }
@@ -248,38 +251,28 @@ bool BPT<T>::borrowFromLeft() {
     bool flag = false;
     int depth_count = 0;
     Node<T> cur_node = cur;
-    if (cur_node.is_leaf) {
-        if (cur_node.prev != -1) {
-            readNode(cur_node.prev);
-        }
-        else {
+    while (true) {
+        if (cur.index == root) {
+            cur = cur_node;
             return false;
         }
-    }
-    else {
-        while (true) {
-            if (cur.index == root) {
-                cur = cur_node;
-                return false;
-            }
-            readNode(cur.father);
-            for (int i = 0; i < cur.size; i++) {
-                if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
-                    if (i > 0) {
-                        readNode(cur.son[i - 1]);
-                        for (int j = 0; j < depth_count; j++) {
-                            readNode(cur.son[cur.size - 1]);
-                        }
-                        flag = true;
+        readNode(cur.father);
+        for (int i = 0; i < cur.size; i++) {
+            if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
+                if (i > 0) {
+                    readNode(cur.son[i - 1]);
+                    for (int j = 0; j < depth_count; j++) {
+                        readNode(cur.son[cur.size - 1]);
                     }
-                    break;
+                    flag = true;
                 }
-            }
-            if (flag) {
                 break;
             }
-            ++depth_count;
         }
+        if (flag) {
+            break;
+        }
+        ++depth_count;
     }
 
     if (cur.size > node_size / 2) {
@@ -332,11 +325,6 @@ void BPT<T>::combine() {
                 for (int j = 0; j < cur_node.size; j++) {
                     father_node.storage[j + father_node.size] = cur_node.storage[j];
                     father_node.son[j + father_node.size] = cur_node.son[j];
-                    if (cur_node.son[j] != -1) {
-                        readNode(cur_node.son[j]);
-                        cur.father = father_node.index;
-                        writeNode(cur, cur.index);
-                    }
                 }
                 cur = father_node;
 
@@ -358,11 +346,6 @@ void BPT<T>::combine() {
                 for (int j = 0; j < father_node.size; j++) {
                     cur_node.storage[j + cur_node.size] = father_node.storage[j];
                     cur_node.son[j + cur_node.size] = father_node.son[j];
-                    if (father_node.son[j] != -1) {
-                        readNode(father_node.son[j]);
-                        cur.father = cur_node.index;
-                        writeNode(cur, cur.index);
-                    }
                 }
                 cur = father_node;
 
@@ -383,14 +366,17 @@ void BPT<T>::combine() {
 
 template<class T>
 void BPT<T>::addData(const T &data) {
-    int p = root;
+    int p = root, q = -1;
     while (true) {
         readNode(p);
+        cur.father = q;
         if (cur.is_leaf) {
             break;
         }
+        writeNode(cur, cur.index);
         for (int i = 0; i < cur.size; i++) {
             if (data <= cur.storage[i] || i == cur.size - 1) {
+                q = p;
                 p = cur.son[i];
                 break;
             }
@@ -415,14 +401,17 @@ void BPT<T>::addData(const T &data) {
 
 template <class T>
 void BPT<T>::removeData(const T &data) {
-    int p = root;
+    int p = root, q = -1;
     while (true) {
         readNode(p);
+        cur.father = q;
         if (cur.is_leaf) {
             break;
         }
+        writeNode(cur, cur.index);
         for (int i = 0; i < cur.size; i++) {
             if (data <= cur.storage[i] || i == cur.size - 1) {
+                q = p;
                 p = cur.son[i];
                 break;
             }
