@@ -212,25 +212,33 @@ bool BPT<T>::borrowFromRight() {
             return false;
         }
         readNode(cur.father);
-        for (int i = 0; i < cur.size; i++) {
-            if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
-                if (i < cur.size - 1) {
-                    int p = cur.index;
-                    readNode(cur.son[i + 1]);
-                    if (cur.father != p) {
-                        cur.father = p;
-                        writeNode(cur, cur.index);
-                    }
-                    for (int j = 0; j < depth_count; j++) {
-                        p = cur.index;
-                        readNode(cur.son[0]);
-                        cur.father = p;
-                        writeNode(cur, cur.index);
-                    }
-                    flag = true;
-                }
-                break;
+        int l = 0, r = cur.size - 1, pos = -1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (cur.storage[mid] == cur_node.storage[cur_node.size - 1]) {
+                pos = mid;
             }
+            if (cur.storage[mid] < cur_node.storage[cur_node.size - 1]) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
+            }
+        }
+        if (pos < cur.size - 1) {
+            int p = cur.index;
+            readNode(cur.son[pos + 1]);
+            if (cur.father != p) {
+                cur.father = p;
+                writeNode(cur, cur.index);
+            }
+            for (int j = 0; j < depth_count; j++) {
+                p = cur.index;
+                readNode(cur.son[0]);
+                cur.father = p;
+                writeNode(cur, cur.index);
+            }
+            flag = true;
         }
         if (flag) {
             break;
@@ -271,17 +279,25 @@ bool BPT<T>::borrowFromLeft() {
             return false;
         }
         readNode(cur.father);
-        for (int i = 0; i < cur.size; i++) {
-            if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
-                if (i > 0) {
-                    readNode(cur.son[i - 1]);
-                    for (int j = 0; j < depth_count; j++) {
-                        readNode(cur.son[cur.size - 1]);
-                    }
-                    flag = true;
-                }
-                break;
+        int l = 0, r = cur.size - 1, pos = -1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (cur.storage[mid] == cur_node.storage[cur_node.size - 1]) {
+                pos = mid;
             }
+            if (cur.storage[mid] < cur_node.storage[cur_node.size - 1]) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
+            }
+        }
+        if (pos > 0) {
+            readNode(cur.son[pos - 1]);
+            for (int j = 0; j < depth_count; j++) {
+                readNode(cur.son[cur.size - 1]);
+            }
+            flag = true;
         }
         if (flag) {
             break;
