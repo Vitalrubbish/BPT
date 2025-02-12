@@ -557,11 +557,7 @@ void BPT<T>::findData(const std::string &str) {
     }
 
     bool output = false;
-    cnt = 0;
     while (true) {
-        if (++cnt > 10) {
-            assert(false);
-        }
         for (int i = 0; i < cur.size; i++) {
             if (_key == cur.storage[i].key) {
                 std::cout << cur.storage[i].value << " ";
