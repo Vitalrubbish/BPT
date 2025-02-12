@@ -5,26 +5,27 @@
 #include <cstring>
 #include <fstream>
 
-constexpr int node_size = 128;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 202;  //into debug mode you can modify node_size to 4
+constexpr long long pr = 31;
+constexpr long long mod = 9999999967;
 
 struct Data {
-    char key[64]{};
-    int key_len = 0;
+    long long key = 0;
     int value = 0;
 
     Data () = default;
 
     Data (const std::string & _key, int _value): value(_value) {
-        strcpy(key, _key.c_str());
-        key_len = static_cast<int> (_key.size());
+        for (char i : _key) {
+            key = (key * pr + static_cast<int>(i)) % mod;
+        }
     }
 
     Data &operator= (const Data &other) {
         if (this == &other) {
             return *this;
         }
-        strcpy(key, other.key);
-        key_len = other.key_len;
+        key = other.key;
         value = other.value;
         return *this;
     }

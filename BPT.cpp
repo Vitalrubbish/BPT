@@ -1,43 +1,33 @@
 #include "BPT.h"
 
 bool operator== (const Data &obj1, const Data &obj2) {
-    std::string_view key1(obj1.key, obj1.key_len);
-    std::string_view key2(obj2.key, obj2.key_len);
-    return key1 == key2 && obj1.value == obj2.value;
+    return obj1.key == obj2.key && obj1.value == obj2.value;
 }
 
 bool operator< (const Data &obj1, const Data &obj2) {
-    std::string_view key1(obj1.key, obj1.key_len);
-    std::string_view key2(obj2.key, obj2.key_len);
-    if (key1 != key2) {
-        return key1 < key2;
+    if (obj1.key != obj2.key) {
+        return obj1.key < obj2.key;
     }
     return obj1.value < obj2.value;
 }
 
 bool operator> (const Data &obj1, const Data &obj2) {
-    std::string_view key1(obj1.key, obj1.key_len);
-    std::string_view key2(obj2.key, obj2.key_len);
-    if (key1 != key2) {
-        return key1 > key2;
+    if (obj1.key != obj2.key) {
+        return obj1.key > obj2.key;
     }
     return obj1.value > obj2.value;
 }
 
 bool operator<= (const Data &obj1, const Data &obj2) {
-    std::string_view key1(obj1.key, obj1.key_len);
-    std::string_view key2(obj2.key, obj2.key_len);
-    if (key1 != key2) {
-        return key1 < key2;
+    if (obj1.key != obj2.key) {
+        return obj1.key < obj2.key;
     }
     return obj1.value <= obj2.value;
 }
 
 bool operator>= (const Data &obj1, const Data &obj2) {
-    std::string_view key1(obj1.key, obj1.key_len);
-    std::string_view key2(obj2.key, obj2.key_len);
-    if (key1 != key2) {
-        return key1 > key2;
+    if (obj1.key != obj2.key) {
+        return obj1.key > obj2.key;
     }
     return obj1.value >= obj2.value;
 }
@@ -504,6 +494,12 @@ void BPT<T>::removeData(const T &data) {
 
 template <class T>
 void BPT<T>::findData(const std::string &str) {
+
+    long long _key = 0;
+    for (auto i:str) {
+        _key = (_key * pr + static_cast<int>(i)) % mod;
+    }
+
     int p = root;
     while (true) {
         readNode(p);
@@ -514,8 +510,7 @@ void BPT<T>::findData(const std::string &str) {
         int l = 0, r = cur.size - 1;
         while (l <= r) {
             int mid = (l + r) / 2;
-            std::string _str(cur.storage[mid].key, cur.storage[mid].key_len);
-            if (str <= _str) {
+            if (_key <= cur.storage[mid].key) {
                 r = mid - 1;
             }
             else {
@@ -533,8 +528,7 @@ void BPT<T>::findData(const std::string &str) {
     bool output = false;
     while (true) {
         for (int i = 0; i < cur.size; i++) {
-            std::string _str(cur.storage[i].key, cur.storage[i].key_len);
-            if (_str == str) {
+            if (_key == cur.storage[i].key) {
                 std::cout << cur.storage[i].value << " ";
                 output = true;
             }
