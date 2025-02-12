@@ -41,9 +41,6 @@ void BPT<T>::readNode(const int &index_) {
     else {
         node_file.seekp(index_ * sizeof(Node<T>));
         node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
-        if (cur.size < node_size / 2 - 1) {
-            std::cout << "error" << '\n';
-        }
     }
 }
 
@@ -207,7 +204,11 @@ bool BPT<T>::borrowFromRight() {
     int depth_count = 0;
     Node<T> cur_node = cur;
 
+    int cnt = 0;
     while (true) {
+        if (++cnt > 10) {
+            break;
+        }
         if (cur.index == root) {
             cur = cur_node;
             return false;
@@ -266,7 +267,11 @@ bool BPT<T>::borrowFromLeft() {
     bool flag = false;
     int depth_count = 0;
     Node<T> cur_node = cur;
+    int cnt = 0;
     while (true) {
+        if (++cnt > 10) {
+            break;
+        }
         if (cur.index == root) {
             cur = cur_node;
             return false;
@@ -377,7 +382,11 @@ void BPT<T>::combine() {
 template<class T>
 void BPT<T>::addData(const T &data) {
     int p = root, q = -1;
+    int cnt = 0;
     while (true) {
+        if (++cnt > 10) {
+            break;
+        }
         readNode(p);
         if (cur.father != q) {
             cur.father = q;
@@ -422,7 +431,11 @@ void BPT<T>::addData(const T &data) {
 template <class T>
 void BPT<T>::removeData(const T &data) {
     int p = root, q = -1;
+    int cnt = 0;
     while (true) {
+        if (++cnt > 10) {
+            break;
+        }
         readNode(p);
         if (cur.father != q) {
             cur.father = q;
@@ -471,7 +484,11 @@ void BPT<T>::removeData(const T &data) {
         return;
     }
 
+    cnt = 0;
     while(true) {
+        if (++cnt > 10) {
+            break;
+        }
         if (cur.size < node_size / 2 && cur.index != root) {
             bool flag = borrowFromRight();
             if (!flag) {
@@ -497,14 +514,17 @@ void BPT<T>::removeData(const T &data) {
 
 template <class T>
 void BPT<T>::findData(const std::string &str) {
-
     long long _key = 0;
     for (auto i:str) {
         _key = (_key * pr + static_cast<int>(i)) % mod;
     }
 
+    int cnt = 0;
     int p = root;
     while (true) {
+        if (++cnt > 10) {
+            break;
+        }
         readNode(p);
         if (cur.is_leaf) {
             break;
