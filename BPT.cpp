@@ -1,5 +1,5 @@
 #include "BPT.h"
-
+#include <cassert>
 bool operator== (const Data &obj1, const Data &obj2) {
     return obj1.key == obj2.key && obj1.value == obj2.value;
 }
@@ -176,7 +176,11 @@ void BPT<T>::flush(int st) {
     Node<T> st_node = cur;
     Node<T> son_node = cur;
     readNode(cur.father);
+    int cnt = 0;
     while (!flag) {
+        if (++cnt > 10) {
+            assert(false);
+        }
         for (int i = 0; i < cur.size; i++) {
             if (cur.son[i] == son_node.index) {
                 if (cur.storage[i] != son_node.storage[son_node.size - 1]) {
@@ -207,7 +211,7 @@ bool BPT<T>::borrowFromRight() {
     int cnt = 0;
     while (true) {
         if (++cnt > 10) {
-            break;
+            assert(false);
         }
         if (cur.index == root) {
             cur = cur_node;
@@ -270,7 +274,7 @@ bool BPT<T>::borrowFromLeft() {
     int cnt = 0;
     while (true) {
         if (++cnt > 10) {
-            break;
+            assert(false);
         }
         if (cur.index == root) {
             cur = cur_node;
@@ -385,7 +389,7 @@ void BPT<T>::addData(const T &data) {
     int cnt = 0;
     while (true) {
         if (++cnt > 10) {
-            break;
+            assert(false);
         }
         readNode(p);
         if (cur.father != q) {
@@ -421,7 +425,11 @@ void BPT<T>::addData(const T &data) {
         if (data == cur.storage[cur.size - 1]) {
             flush(cur.index);
         }
+        cnt = 0;
         while (cur.size > node_size) {
+            if (++cnt > 10) {
+                assert(false);
+            }
             splitNode();
         }
     }
@@ -434,7 +442,7 @@ void BPT<T>::removeData(const T &data) {
     int cnt = 0;
     while (true) {
         if (++cnt > 10) {
-            break;
+            assert(false);
         }
         readNode(p);
         if (cur.father != q) {
@@ -487,7 +495,7 @@ void BPT<T>::removeData(const T &data) {
     cnt = 0;
     while(true) {
         if (++cnt > 10) {
-            break;
+            assert(false);
         }
         if (cur.size < node_size / 2 && cur.index != root) {
             bool flag = borrowFromRight();
@@ -523,7 +531,7 @@ void BPT<T>::findData(const std::string &str) {
     int p = root;
     while (true) {
         if (++cnt > 10) {
-            break;
+            assert(false);
         }
         readNode(p);
         if (cur.is_leaf) {
@@ -549,7 +557,11 @@ void BPT<T>::findData(const std::string &str) {
     }
 
     bool output = false;
+    cnt = 0;
     while (true) {
+        if (++cnt > 10) {
+            assert(false);
+        }
         for (int i = 0; i < cur.size; i++) {
             if (_key == cur.storage[i].key) {
                 std::cout << cur.storage[i].value << " ";
