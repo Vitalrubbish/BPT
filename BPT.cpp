@@ -284,9 +284,17 @@ bool BPT<T>::borrowFromLeft() {
         for (int i = 0; i < cur.size; i++) {
             if (cur.storage[i] == cur_node.storage[cur_node.size - 1]) {
                 if (i > 0) {
+                    int p = cur.index;
                     readNode(cur.son[i - 1]);
+                    if (cur.father != p) {
+                        cur.father = p;
+                        writeNode(cur, cur.index);
+                    }
                     for (int j = 0; j < depth_count; j++) {
+                        p = cur.index;
                         readNode(cur.son[cur.size - 1]);
+                        cur.father = p;
+                        writeNode(cur, cur.index);
                     }
                     flag = true;
                 }
