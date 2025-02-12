@@ -96,6 +96,8 @@ public:
             basic_file.read(reinterpret_cast<char*> (&root), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&head), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&new_id), sizeof(int));
+            node_file.seekp(root * sizeof(Node<T>));
+            node_file.read(reinterpret_cast<char*>(&root_node), sizeof(Node<T>));
         }
         basic_file.close();
     }
