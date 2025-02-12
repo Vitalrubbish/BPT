@@ -41,6 +41,9 @@ void BPT<T>::readNode(const int &index_) {
     else {
         node_file.seekp(index_ * sizeof(Node<T>));
         node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+        if (cur.size < node_size / 2 - 1) {
+            std::cout << "error" << '\n';
+        }
     }
 }
 
