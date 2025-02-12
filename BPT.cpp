@@ -501,9 +501,9 @@ void BPT<T>::removeData(const T &data) {
 
 template <class T>
 void BPT<T>::findData(const std::string &str) {
-    long long _key = 0;
+    int _key = 0;
     for (auto i:str) {
-        _key = (_key * pr + static_cast<int>(i)) % mod;
+        _key = static_cast<int>((static_cast<long long>(_key * pr) + static_cast<int>(i)) % mod);
     }
 
     int p = root;

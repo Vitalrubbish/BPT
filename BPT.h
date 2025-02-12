@@ -5,19 +5,19 @@
 #include <cstring>
 #include <fstream>
 
-constexpr int node_size = 606;  //into debug mode you can modify node_size to 4
-constexpr long long pr = 31;
-constexpr long long mod = 9999999967;
+constexpr int node_size = 808;  //into debug mode you can modify node_size to 4
+constexpr int pr = 31;
+constexpr int mod = 1e9 + 7;
 
 struct Data {
-    long long key = 0;
+    int key = 0;
     int value = 0;
 
     Data () = default;
 
     Data (const std::string & _key, int _value): value(_value) {
         for (char i : _key) {
-            key = (key * pr + static_cast<int>(i)) % mod;
+            key = static_cast<int>((static_cast<long long>(key * pr) + static_cast<int>(i)) % mod);
         }
     }
 
