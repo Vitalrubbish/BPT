@@ -2,7 +2,6 @@
 #include "BPT.h"
 BPT <Data> bpt("file");
 int main() {
-    std::cout << sizeof(Node<Data>) << '\n';
     int operation_cnt;
     std::cin >> operation_cnt;
     while (operation_cnt--) {
