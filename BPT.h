@@ -63,6 +63,7 @@ class BPT {
     int new_id = 0;
 
     Node<T> cur{};
+    Node<T> root_node{};
 
     std::fstream basic_file;
     std::fstream node_file;

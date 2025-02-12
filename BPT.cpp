@@ -45,12 +45,20 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 
 template<class T>
 void BPT<T>::readNode(const int &index_) {
-    node_file.seekp(index_ * sizeof(Node<T>));
-    node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+    if (index_ == root) {
+        cur = root_node;
+    }
+    else {
+        node_file.seekp(index_ * sizeof(Node<T>));
+        node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+    }
 }
 
 template<class T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
+    if (index_ == root) {
+        root_node = node;
+    }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
 }
@@ -430,7 +438,6 @@ void BPT<T>::removeData(const T &data) {
         if (cur.is_leaf) {
             break;
         }
-        writeNode(cur, cur.index);
 
         int l = 0, r = cur.size - 1;
         while (l <= r) {
@@ -480,7 +487,9 @@ void BPT<T>::removeData(const T &data) {
                     combine();
                     readNode(cur.father);
                     if (cur.index == root && !cur.is_leaf && cur.size <= 1) {
-                        root = cur.son[0];
+                        readNode(cur.son[0]);
+                        root = cur.index;
+                        root_node = cur;
                         return;
                     }
                 }
