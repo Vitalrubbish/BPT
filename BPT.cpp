@@ -75,12 +75,10 @@ void BPT<T>::splitNode() {
         cur.next = new_node.index;
     }
 
-    Node<T> tmp = cur;
-    for (int i = mid; i < tmp.size; ++i) {
-        new_node.storage[i - mid] = tmp.storage[i];
-        new_node.son[i - mid] = tmp.son[i];
+    for (int i = mid; i < cur.size; ++i) {
+        new_node.storage[i - mid] = cur.storage[i];
+        new_node.son[i - mid] = cur.son[i];
     }
-    cur = tmp;
 
     new_node.size = cur.size - mid;
     cur.size = mid;
