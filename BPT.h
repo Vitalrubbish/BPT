@@ -110,6 +110,8 @@ public:
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
         basic_file.close();
 
+        node_file.seekp(root * sizeof(Node<T>));
+        node_file.write(reinterpret_cast<char*>(&root_node), sizeof(Node<T>));
         node_file.close();
     }
 

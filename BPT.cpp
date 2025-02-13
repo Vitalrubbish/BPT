@@ -47,6 +47,7 @@ template<class T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
     if (index_ == root) {
         root_node = node;
+        return;
     }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
