@@ -210,7 +210,7 @@ bool BPT<T>::borrowFromRight() {
         }
         readNode(cur.father);
         for (int i = 0; i < cur.size; i++) {
-            if (cur.storage[i] <= cur_node.storage[cur_node.size - 1]) {
+            if (cur.storage[i] >= cur_node.storage[cur_node.size - 1]) {
                 if (i < cur.size - 1) {
                     int p = cur.index;
                     readNode(cur.son[i + 1]);
@@ -269,7 +269,7 @@ bool BPT<T>::borrowFromLeft() {
         }
         readNode(cur.father);
         for (int i = 0; i < cur.size; i++) {
-            if (cur.storage[i] <= cur_node.storage[cur_node.size - 1]) {
+            if (cur.storage[i] >= cur_node.storage[cur_node.size - 1]) {
                 if (i > 0) {
                     int p = cur.index;
                     readNode(cur.son[i - 1]);
@@ -323,7 +323,7 @@ void BPT<T>::combine() {
 
     readNode(cur.father);
     for (int i = 0; i < cur.size; i++) {
-        if (cur.storage[i] <= cur_node.storage[cur_node.size - 1]) {
+        if (cur.storage[i] >= cur_node.storage[cur_node.size - 1]) {
             if (i == cur.size - 1) {
                 cur.storage[i - 1] = cur.storage[i];
                 --cur.size;
