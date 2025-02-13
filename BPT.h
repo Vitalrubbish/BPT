@@ -5,7 +5,7 @@
 #include <cstring>
 #include <fstream>
 
-constexpr int node_size = 4;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 8;  //into debug mode you can modify node_size to 4
 constexpr int pr = 31;
 constexpr int mod = 1e9 + 7;
 
@@ -76,15 +76,15 @@ public:
         basic_file_name = "basic_" + file_name;
         node_file_name = "node_" + file_name;
 
-        node_file.open(node_file_name, std::ios::in|std::ios::out);
-        if (!node_file.is_open()) {
+        //node_file.open(node_file_name, std::ios::in|std::ios::out);
+        //if (!node_file.is_open()) {
             node_file.open(node_file_name, std::ios::out);
             node_file.close();
             node_file.open(node_file_name, std::ios::in|std::ios::out);
-        }
+        //}
 
-        basic_file.open(basic_file_name, std::ios::in|std::ios::out);
-        if (!basic_file.is_open()) {
+        //basic_file.open(basic_file_name, std::ios::in|std::ios::out);
+        //if (!basic_file.is_open()) {
             basic_file.open(basic_file_name, std::ios::out);
             basic_file.close();
             basic_file.open(basic_file_name, std::ios::in|std::ios::out);
@@ -92,14 +92,14 @@ public:
             cur.index = new_id;
             writeNode(cur, cur.index);
             new_id++;
-        }
-        else {
+        //}
+        /*else {
             basic_file.read(reinterpret_cast<char*> (&root), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&head), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&new_id), sizeof(int));
             node_file.seekp(root * sizeof(Node<T>));
             node_file.read(reinterpret_cast<char*>(&root_node), sizeof(Node<T>));
-        }
+        }*/
         basic_file.close();
     }
 
