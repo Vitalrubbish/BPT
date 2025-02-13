@@ -5,7 +5,7 @@
 #include <cstring>
 #include <fstream>
 
-constexpr int node_size = 338;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 4;  //into debug mode you can modify node_size to 4
 constexpr int pr = 31;
 constexpr int mod = 1e9 + 7;
 
