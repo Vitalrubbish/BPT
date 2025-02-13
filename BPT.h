@@ -5,7 +5,7 @@
 #include <cstring>
 #include <fstream>
 
-constexpr int node_size = 676;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 4;  //into debug mode you can modify node_size to 4
 constexpr int pr = 31;
 constexpr int mod = 1e9 + 7;
 
@@ -110,8 +110,6 @@ public:
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
         basic_file.close();
 
-        node_file.seekp(root * sizeof(Node<T>));
-        node_file.write(reinterpret_cast<char*>(&root_node), sizeof(Node<T>));
         node_file.close();
     }
 

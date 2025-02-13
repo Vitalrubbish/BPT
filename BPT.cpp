@@ -47,7 +47,6 @@ template<class T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
     if (index_ == root) {
         root_node = node;
-        return;
     }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
@@ -330,12 +329,13 @@ void BPT<T>::combine() {
                 readNode(cur.son[i - 1]);
                 if (cur.is_leaf) {
                     cur.next = cur_node.next;
-                    int prev_index = cur.index;
+                    Node<T> tmp = cur;
                     if (cur_node.next != -1) {
                         readNode(cur_node.next);
-                        cur.prev = prev_index;
+                        cur.prev = tmp.index;
                         writeNode(cur, cur.index);
                     }
+                    cur = tmp;
                 }
 
                 for (int j = 0; j < cur_node.size; j++) {
