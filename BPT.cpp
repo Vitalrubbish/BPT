@@ -1,4 +1,5 @@
 #include "BPT.h"
+#include <cassert>
 bool operator== (const Data &obj1, const Data &obj2) {
     return obj1.key == obj2.key && obj1.value == obj2.value;
 }
@@ -174,8 +175,12 @@ void BPT<T>::flush(int st) {
     }
     Node<T> st_node = cur;
     Node<T> son_node = cur;
+    int cnt = 0;
     readNode(cur.father);
     while (!flag) {
+        if (++cnt > 8) {
+            assert(false);
+        }
         for (int i = 0; i < cur.size; i++) {
             if (cur.son[i] == son_node.index) {
                 if (cur.storage[i] != son_node.storage[son_node.size - 1]) {
@@ -203,7 +208,11 @@ bool BPT<T>::borrowFromRight() {
     int depth_count = 0;
     Node<T> cur_node = cur;
 
+    int cnt = 0;
     while (true) {
+        if (++cnt > 8) {
+            assert(false);
+        }
         if (cur.index == root) {
             cur = cur_node;
             return false;
@@ -262,7 +271,11 @@ bool BPT<T>::borrowFromLeft() {
     bool flag = false;
     int depth_count = 0;
     Node<T> cur_node = cur;
+    int cnt = 0;
     while (true) {
+        if (++cnt > 8) {
+            assert(false);
+        }
         if (cur.index == root) {
             cur = cur_node;
             return false;
@@ -381,7 +394,11 @@ void BPT<T>::combine() {
 template<class T>
 void BPT<T>::addData(const T &data) {
     int p = root, q = -1;
+    int cnt = 0;
     while (true) {
+        if (++cnt > 8) {
+            assert(false);
+        }
         readNode(p);
         if (cur.father != q) {
             cur.father = q;
@@ -416,7 +433,11 @@ void BPT<T>::addData(const T &data) {
         if (data == cur.storage[cur.size - 1]) {
             flush(cur.index);
         }
+        cnt = 0;
         while (cur.size > node_size) {
+            if (++cnt > 8) {
+                assert(false);
+            }
             splitNode();
         }
     }
@@ -426,7 +447,11 @@ void BPT<T>::addData(const T &data) {
 template <class T>
 void BPT<T>::removeData(const T &data) {
     int p = root, q = -1;
+    int cnt = 0;
     while (true) {
+        if (++cnt > 8) {
+            assert(false);
+        }
         readNode(p);
         if (cur.father != q) {
             cur.father = q;
@@ -461,7 +486,11 @@ void BPT<T>::removeData(const T &data) {
     remove(data);
     writeNode(cur, cur.index);
 
+    cnt = 0;
     while(true) {
+        if (++cnt > 8) {
+            assert(false);
+        }
         if (cur.size < node_size / 2 && cur.index != root) {
             bool flag = borrowFromRight();
             if (!flag) {
