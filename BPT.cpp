@@ -221,8 +221,10 @@ bool BPT<T>::borrowFromRight() {
                     for (int j = 0; j < depth_count; j++) {
                         p = cur.index;
                         readNode(cur.son[0]);
-                        cur.father = p;
-                        writeNode(cur, cur.index);
+                        if (cur.father != p) {
+                            cur.father = p;
+                            writeNode(cur, cur.index);
+                        }
                     }
                     flag = true;
                 }
@@ -280,8 +282,10 @@ bool BPT<T>::borrowFromLeft() {
                     for (int j = 0; j < depth_count; j++) {
                         p = cur.index;
                         readNode(cur.son[cur.size - 1]);
-                        cur.father = p;
-                        writeNode(cur, cur.index);
+                        if (cur.father != p) {
+                            cur.father = p;
+                            writeNode(cur, cur.index);
+                        }
                     }
                     flag = true;
                 }
@@ -299,6 +303,7 @@ bool BPT<T>::borrowFromLeft() {
         int left_son = cur.son[cur.size - 1];
         remove(tmp);
         writeNode(cur, cur.index);
+        flush(cur.index);
         cur = cur_node;
         insert(tmp, left_son);
         writeNode(cur, cur.index);
