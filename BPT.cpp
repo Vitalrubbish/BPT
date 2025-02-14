@@ -299,7 +299,6 @@ bool BPT<T>::borrowFromLeft() {
         int left_son = cur.son[cur.size - 1];
         remove(tmp);
         writeNode(cur, cur.index);
-        flush(cur.index);
         cur = cur_node;
         insert(tmp, left_son);
         writeNode(cur, cur.index);
