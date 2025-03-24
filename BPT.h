@@ -64,7 +64,6 @@ class BPT {
     int new_id = 0;
 
     Node<T> cur{};
-    Node<T> root_node{};
 
     std::fstream basic_file;
     std::fstream node_file;
@@ -98,7 +97,6 @@ public:
             basic_file.read(reinterpret_cast<char*> (&head), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&new_id), sizeof(int));
             node_file.seekp(root * sizeof(Node<T>));
-            node_file.read(reinterpret_cast<char*>(&root_node), sizeof(Node<T>));
         }
         basic_file.close();
     }
@@ -111,7 +109,6 @@ public:
         basic_file.close();
 
         node_file.seekp(root * sizeof(Node<T>));
-        node_file.write(reinterpret_cast<char*>(&root_node), sizeof(Node<T>));
         node_file.close();
     }
 
