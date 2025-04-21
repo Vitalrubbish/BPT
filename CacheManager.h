@@ -4,7 +4,7 @@
 #include "./list/list.hpp"
 #include <string>
 #include <fstream>
-const int max_size_ = 24;
+const int max_size_ = 256;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
