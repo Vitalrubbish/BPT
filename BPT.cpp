@@ -480,22 +480,16 @@ void BPT<T>::removeData(const T &data) {
 
 template <typename T>
 void BPT<T>::findData(const std::string &str) {
-    int _key = 0;
-    for (auto i:str) {
-        _key = static_cast<int>((static_cast<long long>(_key * pr) + static_cast<int>(i)) % mod);
-    }
-
     int p = root;
     while (true) {
         readNode(p);
         if (cur.is_leaf) {
             break;
         }
-
         int l = 0, r = cur.size - 1;
         while (l <= r) {
             int mid = (l + r) / 2;
-            if (_key <= cur.storage[mid].key) {
+            if (std::strcmp(str.c_str(), cur.storage[mid].key) <= 0) {
                 r = mid - 1;
             }
             else {
@@ -513,11 +507,11 @@ void BPT<T>::findData(const std::string &str) {
     bool output = false;
     while (true) {
         for (int i = 0; i < cur.size; i++) {
-            if (_key == cur.storage[i].key) {
+            if (std::strcmp(str.c_str(), cur.storage[i].key) == 0) {
                 std::cout << cur.storage[i].value << " ";
                 output = true;
             }
-            else if (_key < cur.storage[i].key) {
+            else if (std::strcmp(str.c_str(), cur.storage[i].key) < 0) {
                 goto End;
             }
         }
