@@ -45,6 +45,7 @@ void BPT<T>::readNode(const int &index_) {
     cacheManager.recordAccess(photo_of_index_, cur);
     if (cacheManager.size() > max_size_) {
         auto it = cacheManager.timeList.end();
+        --it;
         node_file.seekp(it -> second * sizeof(Node<T>));
         node_file.write(reinterpret_cast<char*>(&cacheManager.cachePool[it -> second].data), sizeof(Node<T>));
         cacheManager.cachePool.erase(cacheManager.cachePool.find(it -> second));
@@ -57,7 +58,6 @@ void BPT<T>::writeNode(Node<T> node, const int &index_) {
     int photo_of_index_ = index_;
     if (cacheManager.cachePool.count(index_)) {
         cacheManager.cachePool[index_].data = node;
-        cacheManager.recordAccess(photo_of_index_, cur);
     }
     else {
         node_file.seekp(index_ * sizeof(Node<T>));
