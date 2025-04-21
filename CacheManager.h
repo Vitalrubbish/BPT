@@ -4,13 +4,14 @@
 #include "./list/list.hpp"
 #include <string>
 #include <fstream>
-const int max_size_ = 24;
+const int max_size_ = 64;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
         T data{};
         int t{};
     };
+    sjtu::map<size_t, int> timeList;
     sjtu::map<int, LRUNode> cachePool;
     std::size_t timeStamp = 0;
 
@@ -24,6 +25,7 @@ struct CacheManager {
             cachePool[index] = LRUNode{node};
         }
         cachePool[index].t = timeStamp;
+        timeList[timeStamp] = index;
     }
 
     [[nodiscard]] std::size_t size() const {
