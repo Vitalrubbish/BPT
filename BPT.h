@@ -1,14 +1,12 @@
 #ifndef BPT_H
 #define BPT_H
+#include "CacheManager.h"
 #include <iostream>
 #include <string>
 #include <cstring>
 #include <fstream>
-#include <mutex>
 
-constexpr int node_size = 56;  //into debug mode you can modify node_size to 4
-constexpr int pr = 31;
-constexpr int mod = 1e9 + 7;
+constexpr int node_size = 48;  //into debug mode you can modify node_size to 4
 
 struct Data {
     char key[66]{};
@@ -63,6 +61,7 @@ class BPT {
     int new_id = 0;
 
     Node<T> cur{};
+    CacheManager<Node<T>> cacheManager;
 
     std::fstream basic_file;
     std::fstream node_file;
@@ -71,8 +70,8 @@ class BPT {
 
 public:
     explicit BPT(const std::string &file_name) {
-        basic_file_name = "basic_" + file_name;
-        node_file_name = "node_" + file_name;
+        basic_file_name = "_basic_" + file_name;
+        node_file_name = "_node_" + file_name;
 
         node_file.open(node_file_name, std::ios::in|std::ios::out);
         if (!node_file.is_open()) {
@@ -105,9 +104,12 @@ public:
         basic_file.write(reinterpret_cast<char*> (&root), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&head), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
-        basic_file.close();
-
-        node_file.seekp(root * sizeof(Node<T>));
+        while (!cacheManager.cachePool.empty()) {
+            auto it = cacheManager.cachePool.begin();
+            node_file.seekp((it -> first) * sizeof(Node<T>));
+            node_file.write(reinterpret_cast<char*>(&(it -> second.data)), sizeof(Node<T>));
+            cacheManager.cachePool.erase(it);
+        }
         node_file.close();
     }
 
