@@ -4,7 +4,7 @@
 #include "./list/list.hpp"
 #include <string>
 #include <fstream>
-const int max_size_ = 64;
+const int max_size_ = 24;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
@@ -31,6 +31,5 @@ struct CacheManager {
     [[nodiscard]] std::size_t size() const {
         return cachePool.size();
     }
-
 };
 #endif //CACHEMANAGER_H
