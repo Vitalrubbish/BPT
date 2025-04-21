@@ -60,8 +60,10 @@ void BPT<T>::readNode(const int &index_) {
 
 template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
+    int photo_of_index_ = index_;
     if (cacheManager.cachePool.count(index_)) {
         cacheManager.cachePool[index_].data = node;
+        cacheManager.recordAccess(photo_of_index_, cur);
     }
     else {
         node_file.seekp(index_ * sizeof(Node<T>));
