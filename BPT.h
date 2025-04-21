@@ -4,28 +4,27 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include <mutex>
 
-constexpr int node_size = 8;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 56;  //into debug mode you can modify node_size to 4
 constexpr int pr = 31;
 constexpr int mod = 1e9 + 7;
 
 struct Data {
-    int key = 0;
+    char key[66]{};
     int value = 0;
 
     Data () = default;
 
     Data (const std::string & _key, int _value): value(_value) {
-        for (char i : _key) {
-            key = static_cast<int>((static_cast<long long>(key * pr) + static_cast<int>(i)) % mod);
-        }
+        std::strcpy(key, _key.c_str());
     }
 
     Data &operator= (const Data &other) {
         if (this == &other) {
             return *this;
         }
-        key = other.key;
+        std::strcpy(key, other.key);
         value = other.value;
         return *this;
     }
@@ -42,7 +41,7 @@ struct Data {
 
 };
 
-template <class T>
+template <typename T>
 struct Node {
     int index = -1;
     int size = 0;
@@ -57,7 +56,7 @@ struct Node {
 
 
 
-template <class T>
+template <typename T>
 class BPT {
     int root = -1;
     int head = -1;

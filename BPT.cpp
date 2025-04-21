@@ -1,50 +1,50 @@
 #include "BPT.h"
 bool operator== (const Data &obj1, const Data &obj2) {
-    return obj1.key == obj2.key && obj1.value == obj2.value;
+    return strcmp(obj1.key, obj2.key) == 0 && obj1.value == obj2.value;
 }
 
 bool operator< (const Data &obj1, const Data &obj2) {
-    if (obj1.key != obj2.key) {
-        return obj1.key < obj2.key;
+    if (strcmp(obj1.key, obj2.key) != 0) {
+        return strcmp(obj1.key, obj2.key) < 0;
     }
     return obj1.value < obj2.value;
 }
 
 bool operator> (const Data &obj1, const Data &obj2) {
-    if (obj1.key != obj2.key) {
-        return obj1.key > obj2.key;
+    if (strcmp(obj1.key, obj2.key) != 0) {
+        return strcmp(obj1.key, obj2.key) > 0;
     }
     return obj1.value > obj2.value;
 }
 
 bool operator<= (const Data &obj1, const Data &obj2) {
-    if (obj1.key != obj2.key) {
-        return obj1.key < obj2.key;
+    if (strcmp(obj1.key, obj2.key) != 0) {
+        return strcmp(obj1.key, obj2.key) < 0;
     }
     return obj1.value <= obj2.value;
 }
 
 bool operator>= (const Data &obj1, const Data &obj2) {
-    if (obj1.key != obj2.key) {
-        return obj1.key > obj2.key;
+    if (strcmp(obj1.key, obj2.key) != 0) {
+        return strcmp(obj1.key, obj2.key) > 0;
     }
     return obj1.value >= obj2.value;
 }
 
 
-template<class T>
+template<typename T>
 void BPT<T>::readNode(const int &index_) {
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
 }
 
-template<class T>
+template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
 }
 
-template<class T>
+template<typename T>
 void BPT<T>::splitNode() {
     int mid = node_size / 2;
 
@@ -106,7 +106,7 @@ void BPT<T>::splitNode() {
     writeNode(cur, cur.index);
 }
 
-template<class T>
+template<typename T>
 void BPT<T>::insert(const T &data, const int &son_index) {
     int l = 0, r = cur.size - 1;
     while (l <= r) {
@@ -130,7 +130,7 @@ void BPT<T>::insert(const T &data, const int &son_index) {
     ++cur.size;
 }
 
-template<class T>
+template<typename T>
 void BPT<T>::remove(const T &data) {
     int pos = -1, l = 0, r = cur.size - 1;
     while (l <= r) {
@@ -156,7 +156,7 @@ void BPT<T>::remove(const T &data) {
     --cur.size;
 }
 
-template<class T>
+template<typename T>
 void BPT<T>::flush(int st) {
     bool flag = false;
     if (st == root) {
@@ -187,7 +187,7 @@ void BPT<T>::flush(int st) {
     cur = st_node;
 }
 
-template<class T>
+template<typename T>
 bool BPT<T>::borrowFromRight() {
     bool flag = false;
     int depth_count = 0;
@@ -249,7 +249,7 @@ bool BPT<T>::borrowFromRight() {
     return false;
 }
 
-template<class T>
+template<typename T>
 bool BPT<T>::borrowFromLeft() {
     bool flag = false;
     int depth_count = 0;
@@ -311,7 +311,7 @@ bool BPT<T>::borrowFromLeft() {
 }
 
 
-template<class T>
+template<typename T>
 void BPT<T>::combine() {
     Node<T> cur_node = cur;
 
@@ -372,7 +372,7 @@ void BPT<T>::combine() {
     }
 }
 
-template<class T>
+template<typename T>
 void BPT<T>::addData(const T &data) {
     int p = root, q = -1;
     while (true) {
@@ -417,7 +417,7 @@ void BPT<T>::addData(const T &data) {
 
 }
 
-template <class T>
+template <typename T>
 void BPT<T>::removeData(const T &data) {
     int p = root, q = -1;
     while (true) {
@@ -478,7 +478,7 @@ void BPT<T>::removeData(const T &data) {
 
 }
 
-template <class T>
+template <typename T>
 void BPT<T>::findData(const std::string &str) {
     int _key = 0;
     for (auto i:str) {
