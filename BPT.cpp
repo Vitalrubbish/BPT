@@ -44,18 +44,22 @@ void BPT<T>::readNode(const int &index_) {
     }
     cacheManager.recordAccess(photo_of_index_, cur);
     if (cacheManager.size() > max_size_) {
-        auto it = cacheManager.timeList.end();
-        --it;
-        node_file.seekp(it -> second * sizeof(Node<T>));
-        node_file.write(reinterpret_cast<char*>(&cacheManager.cachePool[it -> second].data), sizeof(Node<T>));
-        cacheManager.cachePool.erase(cacheManager.cachePool.find(it -> second));
-        cacheManager.timeList.erase(it);
+        size_t min_time = 1e9;
+        int evict_id = -1;
+        for (auto& it: cacheManager.cachePool) {
+            if (it.second.t < min_time) {
+                min_time = it.second.t;
+                evict_id = it.first;
+            }
+        }
+        node_file.seekp(evict_id * sizeof(Node<T>));
+        node_file.write(reinterpret_cast<char*>(&cacheManager.cachePool[evict_id].data), sizeof(Node<T>));
+        cacheManager.cachePool.erase(cacheManager.cachePool.find(evict_id));
     }
 }
 
 template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
-    int photo_of_index_ = index_;
     if (cacheManager.cachePool.count(index_)) {
         cacheManager.cachePool[index_].data = node;
     }
