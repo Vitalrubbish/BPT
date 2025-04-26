@@ -22,10 +22,6 @@ struct CacheManager {
 
         ~LRUNode() = default;
 
-        [[nodiscard]] int getKthAccess(const int& k) const {
-            if (cnt < k) {return 1e9;}
-            return accessTime[cnt % k];
-        }
     };
     int k{};
     std::size_t timeStamp = 0;

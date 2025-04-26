@@ -44,7 +44,7 @@ void BPT<T>::readNode(int index_) {
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
     cacheManager.writeInto(index_, cur);
-    if (cacheManager.size() > max_size_ / 2) {
+    if (cacheManager.size() > max_size_ - 10) {
         bool flag = false;
         int evict_id = -1, min_time = 1e9;
         for (int i = 0; i < max_size_; i++) {
