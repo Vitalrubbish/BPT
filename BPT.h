@@ -61,7 +61,7 @@ class BPT {
     int new_id = 0;
 
     Node<T> cur{};
-    CacheManager<Node<T>> cacheManager;
+    CacheManager<Node<T>> cacheManager{3};
 
     std::fstream basic_file;
     std::fstream node_file;
@@ -71,7 +71,7 @@ class BPT {
 public:
     explicit BPT(const std::string &file_name) {
         basic_file_name = "_basic_" + file_name;
-        node_file_name = "_node_" + file_name;
+        node_file_name = "node_" + file_name;
 
         node_file.open(node_file_name, std::ios::in|std::ios::out);
         if (!node_file.is_open()) {
@@ -104,16 +104,17 @@ public:
         basic_file.write(reinterpret_cast<char*> (&root), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&head), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
-        while (!cacheManager.cachePool.empty()) {
-            auto it = cacheManager.cachePool.begin();
-            node_file.seekp((it -> first) * sizeof(Node<T>));
-            node_file.write(reinterpret_cast<char*>(&(it -> second.data)), sizeof(Node<T>));
-            cacheManager.cachePool.erase(it);
+        for (int i = 0; i < max_size_; i++) {
+            auto& cur = cacheManager.storage[i];
+            if (cur.index != -1) {
+                node_file.seekp(cur.index * sizeof(Node<T>));
+                node_file.write(reinterpret_cast<char*>(&cur.data), sizeof(Node<T>));
+            }
         }
         node_file.close();
     }
 
-    void readNode(const int & );
+    void readNode(int );
 
     void writeNode(Node<T> , const int & );
 

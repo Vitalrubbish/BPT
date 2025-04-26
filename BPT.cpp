@@ -33,40 +33,57 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 
 
 template<typename T>
-void BPT<T>::readNode(const int &index_) {
-    int photo_of_index_ = index_;
-    if (cacheManager.cachePool.count(index_)) {
-        cur = cacheManager.cachePool[index_].data;
+void BPT<T>::readNode(int index_) {
+    for (int i = 0; i < max_size_; i++) {
+        if (cacheManager.storage[i].index == index_) {
+            cur = cacheManager.storage[i].data;
+            cacheManager.recordAccess(i);
+            return;
+        }
     }
-    else {
-        node_file.seekp(index_ * sizeof(Node<T>));
-        node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
-    }
-    cacheManager.recordAccess(photo_of_index_, cur);
-    if (cacheManager.size() > max_size_) {
-        size_t min_time = 1e9;
-        int evict_id = -1;
-        for (auto& it: cacheManager.cachePool) {
-            if (it.second.t < min_time) {
-                min_time = it.second.t;
-                evict_id = it.first;
+    node_file.seekp(index_ * sizeof(Node<T>));
+    node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+    cacheManager.writeInto(index_, cur);
+    if (cacheManager.size() > max_size_ / 2) {
+        bool flag = false;
+        int evict_id = -1, min_time = 1e9;
+        for (int i = 0; i < max_size_; i++) {
+            auto& cur = cacheManager.storage[i];
+            if (cur.index != -1) {
+                if (cur.cnt < cacheManager.k) {
+                    if (!flag) {
+                        flag = true;
+                        min_time = 1e9;
+                    }
+                    if (cur.accessTime[0] < min_time) {
+                        evict_id = i;
+                        min_time = cur.accessTime[0];
+                    }
+                }
+                else if (!flag) {
+                    if (cur.accessTime[cur.cnt % cacheManager.k] < min_time) {
+                        evict_id = i;
+                        min_time = cur.accessTime[cur.cnt % cacheManager.k];
+                    }
+                }
             }
         }
-        node_file.seekp(evict_id * sizeof(Node<T>));
-        node_file.write(reinterpret_cast<char*>(&cacheManager.cachePool[evict_id].data), sizeof(Node<T>));
-        cacheManager.cachePool.erase(cacheManager.cachePool.find(evict_id));
+        node_file.seekp(cacheManager.storage[evict_id].index * sizeof(Node<T>));
+        node_file.write(reinterpret_cast<char*>(&cacheManager.storage[evict_id].data), sizeof(Node<T>));
+        cacheManager.storage[evict_id].index = -1;
     }
 }
 
 template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
-    if (cacheManager.cachePool.count(index_)) {
-        cacheManager.cachePool[index_].data = node;
+    for (int i = 0; i < max_size_; i++) {
+        if (cacheManager.storage[i].index == index_) {
+            cacheManager.storage[i].data = node;
+            return;
+        }
     }
-    else {
-        node_file.seekp(index_ * sizeof(Node<T>));
-        node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
-    }
+    node_file.seekp(index_ * sizeof(Node<T>));
+    node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
 }
 
 template<typename T>
