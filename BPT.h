@@ -61,7 +61,7 @@ class BPT {
     int new_id = 0;
 
     Node<T> cur{};
-    CacheManager<Node<T>> cacheManager{3};
+    CacheManager<Node<T>> cacheManager{2};
 
     std::fstream basic_file;
     std::fstream node_file;
