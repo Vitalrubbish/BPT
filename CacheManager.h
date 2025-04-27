@@ -1,10 +1,7 @@
 #ifndef CACHEMANAGER_H
 #define CACHEMANAGER_H
-#include "./map/map.hpp"
 #include "./list/list.hpp"
-#include <string>
-#include <fstream>
-constexpr int max_size_ = 97;
+constexpr int max_size_ = 100;
 
 template <typename T>
 struct CacheManager {
@@ -16,7 +13,7 @@ struct CacheManager {
 
         LRUNode() = default;
 
-        LRUNode(const T& data_, const int& k) {
+        LRUNode(const T& data_) {
             data = data_;
         }
 
@@ -42,15 +39,16 @@ struct CacheManager {
 
     void writeInto(const int& index, const T& node) {
         ++timeStamp;
-        int cur = index % max_size_;
-        while (storage[cur].index != -1 && storage[cur].index != -2) {
-            cur = (cur + 1) % max_size_;
+        for (auto & i : storage) {
+            if (i.index == -1) {
+                i = LRUNode{node};
+                i.index = index;
+                i.accessTime[0] = timeStamp;
+                ++i.cnt;
+                sze++;
+                return;
+            }
         }
-        storage[cur] = LRUNode{node, k};
-        storage[cur].index = index;
-        storage[cur].accessTime[0] = timeStamp;
-        ++storage[cur].cnt;
-        sze++;
     }
 
     [[nodiscard]] std::size_t size() const {

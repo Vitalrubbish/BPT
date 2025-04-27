@@ -6,7 +6,7 @@
 #include <cstring>
 #include <fstream>
 
-constexpr int node_size = 50;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 100;  //into debug mode you can modify node_size to 4
 
 struct Data {
     char key[66]{};
@@ -61,7 +61,7 @@ class BPT {
     int new_id = 0;
 
     Node<T> cur{};
-    CacheManager<Node<T>> cacheManager{3};
+    CacheManager<Node<T>> cacheManager{4};
 
     std::fstream basic_file;
     std::fstream node_file;

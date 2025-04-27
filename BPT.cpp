@@ -34,27 +34,22 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 
 template<typename T>
 void BPT<T>::readNode(int index_) {
-    int i = index_ % max_size_;
-    while (cacheManager.storage[i].index != -1) {
+    for (int i = 0; i < max_size_; i++) {
         if (cacheManager.storage[i].index == index_) {
             cur = cacheManager.storage[i].data;
             cacheManager.recordAccess(i);
             return;
         }
-        i = (i + 1) % max_size_;
-        if (i == index_ % max_size_) {
-            break;
-        }
     }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
     cacheManager.writeInto(index_, cur);
-    if (cacheManager.size() > max_size_ - 20) {
+    if (cacheManager.size() > max_size_ - 5) {
         bool flag = false;
         int evict_id = -1, min_time = 1e9;
         for (int i = 0; i < max_size_; i++) {
             auto& cur = cacheManager.storage[i];
-            if (cur.index != -1 && cur.index != -2) {
+            if (cur.index != -1) {
                 if (cur.cnt < cacheManager.k) {
                     if (!flag) {
                         flag = true;
@@ -75,27 +70,21 @@ void BPT<T>::readNode(int index_) {
         }
         node_file.seekp(cacheManager.storage[evict_id].index * sizeof(Node<T>));
         node_file.write(reinterpret_cast<char*>(&cacheManager.storage[evict_id].data), sizeof(Node<T>));
-        cacheManager.storage[evict_id].index = -2;
+        cacheManager.storage[evict_id].index = -1;
     }
 }
 
 template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
-    int i = index_ % max_size_;
-    while (cacheManager.storage[i].index != -1) {
+    for (int i = 0; i < max_size_; i++) {
         if (cacheManager.storage[i].index == index_) {
             cacheManager.storage[i].data = node;
             return;
-        }
-        i = (i + 1) % max_size_;
-        if (i == index_ % max_size_) {
-            break;
         }
     }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
 }
-
 template<typename T>
 void BPT<T>::splitNode() {
     int mid = node_size / 2;
