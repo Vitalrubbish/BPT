@@ -4,7 +4,7 @@
 #include "./list/list.hpp"
 #include <string>
 #include <fstream>
-constexpr int max_size_ = 100;
+constexpr int max_size_ = 97;
 
 template <typename T>
 struct CacheManager {
@@ -42,16 +42,15 @@ struct CacheManager {
 
     void writeInto(const int& index, const T& node) {
         ++timeStamp;
-        for (auto & i : storage) {
-            if (i.index == -1) {
-                i = LRUNode{node, k};
-                i.index = index;
-                i.accessTime[0] = timeStamp;
-                ++i.cnt;
-                sze++;
-                return;
-            }
+        int cur = index % max_size_;
+        while (storage[cur].index != -1 && storage[cur].index != -2) {
+            cur = (cur + 1) % max_size_;
         }
+        storage[cur] = LRUNode{node, k};
+        storage[cur].index = index;
+        storage[cur].accessTime[0] = timeStamp;
+        ++storage[cur].cnt;
+        sze++;
     }
 
     [[nodiscard]] std::size_t size() const {
