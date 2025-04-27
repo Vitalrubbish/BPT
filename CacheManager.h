@@ -1,7 +1,7 @@
 #ifndef CACHEMANAGER_H
 #define CACHEMANAGER_H
 #include "./list/list.hpp"
-constexpr int max_size_ = 50;
+constexpr int max_size_ = 40;
 
 template <typename T>
 struct CacheManager {
