@@ -1,14 +1,14 @@
 #ifndef CACHEMANAGER_H
 #define CACHEMANAGER_H
 #include "./list/list.hpp"
-constexpr int max_size_ = 20;
+constexpr int max_size_ = 10;
 
 template <typename T>
 struct CacheManager {
     struct LRUNode {
         int index = -1;
         T data{};
-        int accessTime[5]{};
+        int accessTime[3]{};
         int cnt = 0;
 
         LRUNode() = default;
