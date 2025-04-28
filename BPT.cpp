@@ -34,54 +34,12 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 
 template<typename T>
 void BPT<T>::readNode(int index_) {
-    for (int i = 0; i < max_size_; i++) {
-        if (cacheManager.storage[i].index == index_) {
-            cur = cacheManager.storage[i].data;
-            cacheManager.recordAccess(i);
-            return;
-        }
-    }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
-    cacheManager.writeInto(index_, cur);
-    if (cacheManager.size() > max_size_ - 5) {
-        bool flag = false;
-        int evict_id = -1, min_time = 1e9;
-        for (int i = 0; i < max_size_; i++) {
-            auto& cur = cacheManager.storage[i];
-            if (cur.index != -1) {
-                if (cur.cnt < cacheManager.k) {
-                    if (!flag) {
-                        flag = true;
-                        min_time = 1e9;
-                    }
-                    if (cur.accessTime[0] < min_time) {
-                        evict_id = i;
-                        min_time = cur.accessTime[0];
-                    }
-                }
-                else if (!flag) {
-                    if (cur.accessTime[cur.cnt % cacheManager.k] < min_time) {
-                        evict_id = i;
-                        min_time = cur.accessTime[cur.cnt % cacheManager.k];
-                    }
-                }
-            }
-        }
-        node_file.seekp(cacheManager.storage[evict_id].index * sizeof(Node<T>));
-        node_file.write(reinterpret_cast<char*>(&cacheManager.storage[evict_id].data), sizeof(Node<T>));
-        cacheManager.storage[evict_id].index = -1;
-    }
 }
 
 template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
-    for (int i = 0; i < max_size_; i++) {
-        if (cacheManager.storage[i].index == index_) {
-            cacheManager.storage[i].data = node;
-            return;
-        }
-    }
     node_file.seekp(index_ * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
 }

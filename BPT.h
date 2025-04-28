@@ -1,6 +1,5 @@
 #ifndef BPT_H
 #define BPT_H
-#include "CacheManager.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -61,7 +60,6 @@ class BPT {
     int new_id = 0;
 
     Node<T> cur{};
-    CacheManager<Node<T>> cacheManager{2};
 
     std::fstream basic_file;
     std::fstream node_file;
@@ -104,13 +102,6 @@ public:
         basic_file.write(reinterpret_cast<char*> (&root), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&head), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
-        for (int i = 0; i < max_size_; i++) {
-            auto& cur = cacheManager.storage[i];
-            if (cur.index != -1) {
-                node_file.seekp(cur.index * sizeof(Node<T>));
-                node_file.write(reinterpret_cast<char*>(&cur.data), sizeof(Node<T>));
-            }
-        }
         node_file.close();
     }
 
