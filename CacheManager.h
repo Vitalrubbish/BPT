@@ -3,7 +3,7 @@
 #include "./list/list.hpp"
 #include "./vector/vector.hpp"
 #include "./HashTable.h"
-const int max_size_ = 100;
+const int max_size_ = 1024;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
@@ -27,9 +27,6 @@ struct CacheManager {
     }
 
     T get(const int& index) {
-        if (index == 4) {
-            int a = 1;
-        }
         ++timeStamp;
         typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
         lis.erase(pos);
@@ -40,9 +37,6 @@ struct CacheManager {
     }
 
     void put(const int& index, const T& val) {
-        if (index == 4) {
-            int a = 1;
-        }
         ++timeStamp;
         if (checkExist(index)) {
             typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
