@@ -3,7 +3,7 @@
 #include "./list/list.hpp"
 #include "./vector/vector.hpp"
 #include "./HashTable.h"
-const int max_size_ = 5;
+const int max_size_ = 100;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
