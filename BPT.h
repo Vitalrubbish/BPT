@@ -107,7 +107,6 @@ public:
         basic_file.write(reinterpret_cast<char*> (&root), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&head), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
-        node_file.close();
         while (!cache.lis.empty()) {
             int evict_id = cache.lis.front().index;
             Node<T> element = cache.get(evict_id);
@@ -117,6 +116,7 @@ public:
             node_file.seekp(evict_id * sizeof(Node<T>));
             node_file.write(reinterpret_cast<char*>(&element), sizeof(Node<T>));
         }
+        node_file.close();
     }
 
     void readNode(int );
