@@ -5,4 +5,12 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(code main.cpp
         BPT.h
-        BPT.cpp)
+        BPT.cpp
+        CacheManager.h
+        HashTable.h
+
+        ./list/list.hpp
+        ./vector/vector.hpp
+        ./vector/exceptions.hpp
+        ./vector/utility.hpp
+)

@@ -4,6 +4,8 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include "CacheManager.h"
+
 
 constexpr int node_size = 50;  //into debug mode you can modify node_size to 4
 
@@ -49,6 +51,8 @@ struct Node {
     int son[node_size + 1]{};
     int prev = -1;
     int next = -1;
+
+    //std::shared_mutex latch;
 };
 
 
@@ -61,6 +65,7 @@ class BPT {
 
     Node<T> cur{};
 
+    CacheManager<Node<T>> cache;
     std::fstream basic_file;
     std::fstream node_file;
     std::string basic_file_name;

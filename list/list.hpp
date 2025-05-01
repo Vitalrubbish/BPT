@@ -84,14 +84,13 @@ protected:
 public:
   class const_iterator;
   class iterator {
-  private:
+  public:
    node* cursor = nullptr;
     /**
      * TODO add data members
      *   just add whatever you want.
      */
 
-  public:
    explicit iterator(node* cursor = nullptr) {
     this -> cursor = cursor;
    }
@@ -425,7 +424,7 @@ public:
   /**
    * adds an element to the end
    */
-  void push_back(const T &value) {
+   iterator push_back(const T &value) {
    node* new_node = new node{value};
    new_node -> nxt = tail;
    if (sze == 0) {
@@ -437,6 +436,7 @@ public:
    }
    tail -> prv = new_node;
    ++sze;
+   return iterator{new_node};
   }
   /**
    * removes the last element

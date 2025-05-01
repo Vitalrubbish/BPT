@@ -34,14 +34,27 @@ bool operator>= (const Data &obj1, const Data &obj2) {
 
 template<typename T>
 void BPT<T>::readNode(int index_) {
-    node_file.seekp(index_ * sizeof(Node<T>));
-    node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+    if (cache.checkExist(index_)) {
+        cur = cache.get(index_);
+    }
+    else {
+        node_file.seekp(index_ * sizeof(Node<T>));
+        node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+    }
 }
 
 template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
-    node_file.seekp(index_ * sizeof(Node<T>));
-    node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
+    cache.put(index_, node);
+    if (cache.size() > max_size_) {
+        int evict_id = cache.lis.front().index;
+        Node<T> element = cache.get(evict_id);
+        cache.lis.pop_back();
+        cache.position.erase(evict_id);
+        cache.hashTable.erase(evict_id);
+        node_file.seekp(evict_id * sizeof(Node<T>));
+        node_file.write(reinterpret_cast<char*>(&element), sizeof(Node<T>));
+    }
 }
 template<typename T>
 void BPT<T>::splitNode() {
