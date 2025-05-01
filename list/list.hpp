@@ -448,7 +448,12 @@ public:
    node* tmp = p -> prv;
    delete p;
    tail -> prv = tmp;
-   tmp -> nxt = tail;
+   if (tmp != nullptr) {
+    tmp -> nxt = tail;
+   }
+   else {
+    head = tail;
+   }
    --sze;
   }
   /**
