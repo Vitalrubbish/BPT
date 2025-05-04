@@ -7,6 +7,7 @@ const int max_size_ = 1024;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
+        bool dirty;
         int index;
     };
     HashTable<T> hashTable;
@@ -25,7 +26,7 @@ struct CacheManager {
 
     T get(const int& index) {
         typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
-        LRUNode newNode{index};
+        LRUNode newNode{pos -> dirty, index};
         lis.erase(pos);
         position.erase(index);
         position.sw(index, lis.push_back(newNode));
@@ -33,12 +34,15 @@ struct CacheManager {
     }
 
     void put(const int& index, const T& val) {
-        LRUNode newNode{index};
+        LRUNode newNode{true, index};
         if (checkExist(index)) {
             typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
             lis.erase(pos);
             position.erase(index);
             hashTable.erase(index);
+        }
+        else {
+            newNode.dirty = false;
         }
         hashTable.sw(index, val);
         position.sw(index, lis.push_back(newNode));

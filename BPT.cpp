@@ -31,7 +31,6 @@ bool operator>= (const Data &obj1, const Data &obj2) {
     return obj1.value >= obj2.value;
 }
 
-
 template<typename T>
 void BPT<T>::readNode(int index_) {
     if (cache.checkExist(index_)) {
@@ -40,6 +39,7 @@ void BPT<T>::readNode(int index_) {
     else {
         node_file.seekp(index_ * sizeof(Node<T>));
         node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+        cache.put(index_, cur);
     }
 }
 
@@ -48,12 +48,15 @@ void BPT<T>::writeNode(Node<T> node, const int &index_) {
     cache.put(index_, node);
     if (cache.size() > max_size_) {
         int evict_id = cache.lis.front().index;
+        bool dir = cache.lis.front().dirty;
         Node<T> element = cache.get(evict_id);
         cache.lis.pop_back();
         cache.position.erase(evict_id);
         cache.hashTable.erase(evict_id);
-        node_file.seekp(evict_id * sizeof(Node<T>));
-        node_file.write(reinterpret_cast<char*>(&element), sizeof(Node<T>));
+        if (dir) {
+            node_file.seekp(evict_id * sizeof(Node<T>));
+            node_file.write(reinterpret_cast<char*>(&element), sizeof(Node<T>));
+        }
     }
 }
 template<typename T>
@@ -101,6 +104,8 @@ void BPT<T>::splitNode() {
         new_root.is_leaf = false;
         new_root.size = 2;
         cur = new_root;
+        node_file.seekp(cur.index * sizeof(Node<T>));
+        node_file.write(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
     }
     else {
         readNode(original_node.father);
@@ -114,7 +119,8 @@ void BPT<T>::splitNode() {
     }
 
     writeNode(original_node, original_node.index);
-    writeNode(new_node, new_node.index);
+    node_file.seekp(new_node.index * sizeof(Node<T>));
+    node_file.write(reinterpret_cast<char*>(&new_node), sizeof(Node<T>));
     writeNode(cur, cur.index);
 }
 
