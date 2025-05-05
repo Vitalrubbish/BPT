@@ -116,12 +116,12 @@ void BPT<T>::splitNode() {
             }
         }
         insert(original_node.storage[original_node.size - 1], original_node.index);
+        writeNode(cur, cur.index);
     }
 
     writeNode(original_node, original_node.index);
     node_file.seekp(new_node.index * sizeof(Node<T>));
     node_file.write(reinterpret_cast<char*>(&new_node), sizeof(Node<T>));
-    writeNode(cur, cur.index);
 }
 
 template<typename T>
