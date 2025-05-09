@@ -4,7 +4,7 @@
 #include "./vector/vector.hpp"
 #include <shared_mutex>
 #include "./HashTable.h"
-const int max_size_ = 1024;
+const int max_size_ = 2000;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
