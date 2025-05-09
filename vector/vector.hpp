@@ -408,7 +408,7 @@ public:
 
 	void halfSize() {
 		sze /= 2;
-		T** tmp = static_cast<T*> (operator new (sze * sizeof(T)));
+		T* tmp = static_cast<T*> (operator new (sze * sizeof(T)));
 		for (int i = 0; i < len; i++) {
 			new(&tmp[i]) T(storage[i]);
 			storage[i].~T();
@@ -487,9 +487,9 @@ public:
 			storage[i] = storage[i + 1];
 		}
 
-		/*if (len < sze / 2 && sze != 1) {
+		if (len < sze / 2 && sze != 1) {
 			halfSize();
-		}*/
+		}
 		return ret;
 	}
 	/**
