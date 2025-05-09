@@ -2,7 +2,7 @@
 #define HASHTABLE_H
 #include "./vector/vector.hpp"
 #include <vector>
-const int MOD = 119;
+const int MOD = 1193;
 template <typename U>
 struct HashTable {
     struct Pair {
