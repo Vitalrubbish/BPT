@@ -267,8 +267,15 @@ CMakeFiles/code.dir/BPT.cpp.o: ../BPT.cpp \
   /usr/include/c++/11/limits \
   /usr/include/c++/11/ctime \
   /usr/include/c++/11/bits/parse_numbers.h \
+  /usr/include/c++/11/list \
+  /usr/include/c++/11/bits/stl_list.h \
+  /usr/include/c++/11/bits/list.tcc \
   ../HashTable.h \
-  ../vector/vector.hpp
+  ../vector/vector.hpp \
+  /usr/include/c++/11/vector \
+  /usr/include/c++/11/bits/stl_vector.h \
+  /usr/include/c++/11/bits/stl_bvector.h \
+  /usr/include/c++/11/bits/vector.tcc
 
 CMakeFiles/code.dir/main.cpp.o: ../main.cpp \
   /usr/include/stdc-predef.h \
@@ -536,13 +543,28 @@ CMakeFiles/code.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/limits \
   /usr/include/c++/11/ctime \
   /usr/include/c++/11/bits/parse_numbers.h \
+  /usr/include/c++/11/list \
+  /usr/include/c++/11/bits/stl_list.h \
+  /usr/include/c++/11/bits/list.tcc \
   ../HashTable.h \
-  ../vector/vector.hpp
+  ../vector/vector.hpp \
+  /usr/include/c++/11/vector \
+  /usr/include/c++/11/bits/stl_vector.h \
+  /usr/include/c++/11/bits/stl_bvector.h \
+  /usr/include/c++/11/bits/vector.tcc
 
 
 ../main.cpp:
 
+/usr/include/c++/11/bits/vector.tcc:
+
+/usr/include/c++/11/vector:
+
 ../HashTable.h:
+
+/usr/include/c++/11/bits/list.tcc:
+
+/usr/include/c++/11/bits/stl_list.h:
 
 /usr/include/c++/11/bits/parse_numbers.h:
 
@@ -581,6 +603,8 @@ CMakeFiles/code.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/bits/allocated_ptr.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
+
+/usr/include/c++/11/bits/stl_bvector.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
 
@@ -906,6 +930,8 @@ CMakeFiles/code.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/bits/ranges_base.h:
 
+/usr/include/c++/11/bits/stl_vector.h:
+
 /usr/include/c++/11/cstddef:
 
 /usr/include/stdc-predef.h:
@@ -1073,5 +1099,7 @@ CMakeFiles/code.dir/main.cpp.o: ../main.cpp \
 /usr/include/x86_64-linux-gnu/bits/getopt_posix.h:
 
 /usr/include/x86_64-linux-gnu/bits/unistd_ext.h:
+
+/usr/include/c++/11/list:
 
 /usr/include/c++/11/bits/uses_allocator_args.h:

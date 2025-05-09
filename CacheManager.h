@@ -3,6 +3,7 @@
 #include "./list/list.hpp"
 #include "./vector/vector.hpp"
 #include <shared_mutex>
+#include <list>
 #include "./HashTable.h"
 const int max_size_ = 100;
 template <typename T>
@@ -13,8 +14,8 @@ struct CacheManager {
     };
 
     HashTable<T> hashTable;
-    HashTable<typename sjtu::list<LRUNode>::iterator> position;
-    sjtu::list<LRUNode> lis;
+    HashTable<typename std::list<LRUNode>::iterator> position;
+    std::list<LRUNode> lis;
 
     CacheManager() = default;
 
@@ -27,18 +28,21 @@ struct CacheManager {
     }
 
     T get(const int& index) {
-        typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
+        typename std::list<LRUNode>::iterator pos = position.lw(index);
         LRUNode newNode{pos -> dirty, index};
         lis.erase(pos);
         position.erase(index);
-        position.sw(index, lis.push_back(newNode));
+        lis.push_back(newNode);
+        auto pos_ = lis.end();
+        --pos_;
+        position.sw(index, pos_);
         return hashTable.lw(index);
     }
 
     void put(const int& index, const T& val) {
         LRUNode newNode{true, index};
         if (checkExist(index)) {
-            typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
+            typename std::list<LRUNode>::iterator pos = position.lw(index);
             lis.erase(pos);
             position.erase(index);
             hashTable.erase(index);
@@ -47,16 +51,10 @@ struct CacheManager {
             newNode.dirty = false;
         }
         hashTable.sw(index, val);
-        position.sw(index, lis.push_back(newNode));
-    }
-
-    void Remove(const int& index) {
-        if (checkExist(index)) {
-            typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
-            lis.erase(pos);
-            position.erase(index);
-            hashTable.erase(index);
-        }
+        lis.push_back(newNode);
+        auto pos = lis.end();
+        --pos;
+        position.sw(index, pos);
     }
 };
 #endif //CACHEMANAGER_H

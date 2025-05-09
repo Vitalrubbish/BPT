@@ -46,7 +46,7 @@ void BPT<T>::readNode(int index_) {
 template<typename T>
 void BPT<T>::writeNode(Node<T> node, const int &index_) {
     cache.put(index_, node);
-    if (cache.size() > max_size_) {
+    while (cache.size() > max_size_) {
         int evict_id = cache.lis.front().index;
         bool dir = cache.lis.front().dirty;
         Node<T> element = cache.get(evict_id);
