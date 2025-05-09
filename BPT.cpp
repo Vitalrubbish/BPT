@@ -534,7 +534,11 @@ void BPT<T>::findData(const std::string &str) {
                 output = true;
             }
             else if (key_ < cur.storage[i].key) {
-                goto End;
+                if (!output) {
+                    std::cout << "null";
+                }
+                std::cout << "\n";
+                return;
             }
         }
         if (cur.next != -1) {
@@ -544,8 +548,6 @@ void BPT<T>::findData(const std::string &str) {
             break;
         }
     }
-
-    End:;
     if (!output) {
         std::cout << "null";
     }
