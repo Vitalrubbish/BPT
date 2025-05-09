@@ -11,7 +11,7 @@ constexpr int pr = 31;
 constexpr int node_size = 20;  //into debug mode you can modify node_size to 4
 
 struct Data {
-    int key = 0;
+    long long key = 0;
     int value = 0;
 
     Data () = default;
