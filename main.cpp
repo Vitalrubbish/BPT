@@ -1,6 +1,6 @@
 #include <iostream>
 #include "BPT.h"
-BPT <Data> bpt("file");
+BPT <Data> bpt("filesys");
 int main() {
     int operation_cnt;
     std::cin >> operation_cnt;

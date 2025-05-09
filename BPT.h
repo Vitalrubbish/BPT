@@ -51,11 +51,7 @@ struct Node {
     int son[node_size + 1]{};
     int prev = -1;
     int next = -1;
-
-    //std::shared_mutex latch;
 };
-
-
 
 template <typename T>
 class BPT {

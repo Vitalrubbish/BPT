@@ -2,14 +2,16 @@
 #define CACHEMANAGER_H
 #include "./list/list.hpp"
 #include "./vector/vector.hpp"
+#include <shared_mutex>
 #include "./HashTable.h"
-const int max_size_ = 1024;
+const int max_size_ = 100;
 template <typename T>
 struct CacheManager {
     struct LRUNode {
         bool dirty;
         int index;
     };
+
     HashTable<T> hashTable;
     HashTable<typename sjtu::list<LRUNode>::iterator> position;
     sjtu::list<LRUNode> lis;
@@ -46,6 +48,15 @@ struct CacheManager {
         }
         hashTable.sw(index, val);
         position.sw(index, lis.push_back(newNode));
+    }
+
+    void Remove(const int& index) {
+        if (checkExist(index)) {
+            typename sjtu::list<LRUNode>::iterator pos = position.lw(index);
+            lis.erase(pos);
+            position.erase(index);
+            hashTable.erase(index);
+        }
     }
 };
 #endif //CACHEMANAGER_H
