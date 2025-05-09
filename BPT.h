@@ -8,7 +8,7 @@
 
 constexpr long long M = 9576890767;
 constexpr int pr = 31;
-constexpr int node_size = 10;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 50;  //into debug mode you can modify node_size to 4
 
 struct Data {
     long long key = 0;

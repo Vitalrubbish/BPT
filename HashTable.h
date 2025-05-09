@@ -1,6 +1,7 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 #include "./vector/vector.hpp"
+#include <vector>
 const int MOD = 119;
 template <typename U>
 struct HashTable {
@@ -16,7 +17,7 @@ struct HashTable {
         Pair() = default;
     };
 
-    sjtu::vector<Pair> storage[MOD]{};
+    std::vector<Pair> storage[MOD]{};
 
     HashTable() = default;
 
