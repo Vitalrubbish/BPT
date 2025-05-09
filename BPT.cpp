@@ -498,7 +498,7 @@ void BPT<T>::removeData(const T &data) {
 
 template <typename T>
 void BPT<T>::findData(const std::string &str) {
-    int key_ = 0;
+    long long key_ = 0;
     for (auto& i: str) {
         key_ = (key_ * pr + i) % M;
     }

@@ -6,9 +6,9 @@
 #include <fstream>
 #include "CacheManager.h"
 
-constexpr int M = 1e9 + 7;
+constexpr long long M = 9576890767;
 constexpr int pr = 31;
-constexpr int node_size = 50;  //into debug mode you can modify node_size to 4
+constexpr int node_size = 20;  //into debug mode you can modify node_size to 4
 
 struct Data {
     int key = 0;
