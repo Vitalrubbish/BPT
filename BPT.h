@@ -6,24 +6,27 @@
 #include <fstream>
 #include "CacheManager.h"
 
-
+constexpr int M = 1e9 + 7;
+constexpr int pr = 31;
 constexpr int node_size = 50;  //into debug mode you can modify node_size to 4
 
 struct Data {
-    char key[66]{};
+    int key = 0;
     int value = 0;
 
     Data () = default;
 
     Data (const std::string & _key, int _value): value(_value) {
-        std::strcpy(key, _key.c_str());
+        for (auto& it: _key) {
+            key = (key * pr + it) % M;
+        }
     }
 
     Data &operator= (const Data &other) {
         if (this == &other) {
             return *this;
         }
-        std::strcpy(key, other.key);
+        key = other.key;
         value = other.value;
         return *this;
     }

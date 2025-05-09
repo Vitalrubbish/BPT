@@ -1,32 +1,32 @@
 #include "BPT.h"
 bool operator== (const Data &obj1, const Data &obj2) {
-    return strcmp(obj1.key, obj2.key) == 0 && obj1.value == obj2.value;
+    return obj1.key == obj2.key && obj1.value == obj2.value;
 }
 
 bool operator< (const Data &obj1, const Data &obj2) {
-    if (strcmp(obj1.key, obj2.key) != 0) {
-        return strcmp(obj1.key, obj2.key) < 0;
+    if (obj1.key != obj2.key) {
+        return obj1.key < obj2.key;
     }
     return obj1.value < obj2.value;
 }
 
 bool operator> (const Data &obj1, const Data &obj2) {
-    if (strcmp(obj1.key, obj2.key) != 0) {
-        return strcmp(obj1.key, obj2.key) > 0;
+    if (obj1.key != obj2.key) {
+        return obj1.key > obj2.key;
     }
     return obj1.value > obj2.value;
 }
 
 bool operator<= (const Data &obj1, const Data &obj2) {
-    if (strcmp(obj1.key, obj2.key) != 0) {
-        return strcmp(obj1.key, obj2.key) < 0;
+    if (obj1.key != obj2.key) {
+        return obj1.key < obj2.key;
     }
     return obj1.value <= obj2.value;
 }
 
 bool operator>= (const Data &obj1, const Data &obj2) {
-    if (strcmp(obj1.key, obj2.key) != 0) {
-        return strcmp(obj1.key, obj2.key) > 0;
+    if (obj1.key != obj2.key) {
+        return obj1.key > obj2.key;
     }
     return obj1.value >= obj2.value;
 }
@@ -498,6 +498,10 @@ void BPT<T>::removeData(const T &data) {
 
 template <typename T>
 void BPT<T>::findData(const std::string &str) {
+    int key_ = 0;
+    for (auto& i: str) {
+        key_ = (key_ * pr + i) % M;
+    }
     int p = root;
     while (true) {
         readNode(p);
@@ -507,7 +511,7 @@ void BPT<T>::findData(const std::string &str) {
         int l = 0, r = cur.size - 1;
         while (l <= r) {
             int mid = (l + r) / 2;
-            if (std::strcmp(str.c_str(), cur.storage[mid].key) <= 0) {
+            if (key_ <= cur.storage[mid].key) {
                 r = mid - 1;
             }
             else {
@@ -525,11 +529,11 @@ void BPT<T>::findData(const std::string &str) {
     bool output = false;
     while (true) {
         for (int i = 0; i < cur.size; i++) {
-            if (std::strcmp(str.c_str(), cur.storage[i].key) == 0) {
+            if (key_ == cur.storage[i].key) {
                 std::cout << cur.storage[i].value << " ";
                 output = true;
             }
-            else if (std::strcmp(str.c_str(), cur.storage[i].key) < 0) {
+            else if (key_ < cur.storage[i].key) {
                 goto End;
             }
         }
