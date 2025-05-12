@@ -1,3 +1,0 @@
-/mnt/d/数据结构/STLite-ACM-2025-main/BPT/cmake-build-debug/CMakeFiles/code.dir
-/mnt/d/数据结构/STLite-ACM-2025-main/BPT/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/d/数据结构/STLite-ACM-2025-main/BPT/cmake-build-debug/CMakeFiles/rebuild_cache.dir
